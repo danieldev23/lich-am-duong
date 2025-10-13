@@ -1,7 +1,6 @@
 'use client';
 
 import { Header } from '@/components/Header';
-import { Sidebar } from '@/components/Sidebar';
 import { getTetDate } from '@/lib/lunar-calendar';
 import { calculateDaysBetween } from '@/lib/utils';
 import { useEffect, useState } from 'react';
@@ -72,19 +71,15 @@ export default function CountdownPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-yellow-50 to-orange-50">
+    <div className="min-h-screen bg-beige">
       <Header />
       
-      <div className="flex min-h-screen">
-        <Sidebar />
-        
-        <main className="flex-1 lg:ml-64">
+      <main className="w-full">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             {/* Hero Section */}
             <div className="text-center mb-12">
               <div className="mb-6">
                 <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-red-600 to-yellow-600 bg-clip-text text-transparent mb-4">
-                  Tết Nguyên Đán
                 </h1>
                 <p className="text-xl text-neutral-600 mb-2">Năm {tetDate?.getFullYear()}</p>
                 <p className="text-lg text-neutral-500">
@@ -213,8 +208,7 @@ export default function CountdownPage() {
               </div>
             </div>
           </div>
-        </main>
-      </div>
+      </main>
     </div>
   );
 }

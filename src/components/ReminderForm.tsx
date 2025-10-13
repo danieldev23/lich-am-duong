@@ -97,11 +97,10 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-primary mb-2">
-          <i className="fas fa-plus-circle mr-2"></i>
-          Tạo Nhắc Nhở Mới
+        <h2 className="text-2xl font-bold text-emerald-700 mb-2">
+          ➕ Tạo Nhắc Nhở Mới
         </h2>
-        <p className="text-neutral-600">
+        <p className="text-gray-600">
           Tạo nhắc nhở và nhận thông báo qua email
         </p>
       </div>
@@ -137,7 +136,7 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
             placeholder="your@email.com"
           />
         </div>
@@ -155,7 +154,7 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
             value={formData.title}
             onChange={handleChange}
             required
-            className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
             placeholder="VD: Sinh nhật mẹ, Họp công ty..."
           />
         </div>
@@ -192,7 +191,7 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
               onChange={handleChange}
               required
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
             />
           </div>
 
@@ -207,7 +206,7 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
               name="reminderTime"
               value={formData.reminderTime}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent transition-all"
             />
           </div>
         </div>
@@ -220,7 +219,7 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
             name="isRecurring"
             checked={formData.isRecurring}
             onChange={handleChange}
-            className="h-4 w-4 text-primary focus:ring-primary border-neutral-300 rounded"
+            className="h-4 w-4 text-emerald-600 focus:ring-emerald-600 border-gray-300 rounded"
           />
           <label htmlFor="isRecurring" className="ml-2 block text-sm text-neutral-700">
             <i className="fas fa-repeat mr-1"></i>
@@ -236,8 +235,8 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
             className={cn(
               "w-full py-3 px-6 rounded-lg font-medium transition-all",
               isSubmitting
-                ? "bg-neutral-400 cursor-not-allowed"
-                : "bg-primary hover:bg-primary-dark text-white hover:shadow-lg transform hover:-translate-y-0.5"
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-emerald-600 hover:bg-emerald-700 text-white hover:shadow-lg transform hover:-translate-y-0.5"
             )}
           >
             {isSubmitting ? (

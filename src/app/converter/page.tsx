@@ -1,7 +1,6 @@
 'use client';
 
 import { Header } from '@/components/Header';
-import { Sidebar } from '@/components/Sidebar';
 import { convertSolar2Lunar, convertLunar2Solar, getCanChi, getDayName } from '@/lib/lunar-calendar';
 import { useState } from 'react';
 
@@ -94,13 +93,10 @@ export default function ConverterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-beige">
       <Header />
       
-      <div className="flex min-h-screen">
-        <Sidebar />
-        
-        <main className="flex-1 lg:ml-64">
+      <main className="w-full">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-primary mb-2">Chuyển Đổi Lịch</h1>
@@ -332,8 +328,7 @@ export default function ConverterPage() {
               </div>
             </div>
           </div>
-        </main>
-      </div>
+      </main>
     </div>
   );
 }
