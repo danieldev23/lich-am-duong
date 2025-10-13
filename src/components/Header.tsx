@@ -4,50 +4,39 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useSettings } from '@/hooks/useSettings';
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const {settings} = useSettings();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
 
   const navItems = [
     {
       label: 'Xem lịch',
-      icon: 'calendar',
+      icon: 'calendar-days',
       dropdown: [
-        { href: '/', label: 'Xem lịch ngày' },
-        { href: '/calendar', label: 'Xem lịch tháng' },
-        { href: '/yearly', label: 'Xem lịch năm' },
-        { href: '/converter', label: 'Đổi lịch âm dương' },
-      ]
+        { href: '/', label: 'Xem lịch ngày', icon: 'calendar-day' },
+        { href: '/calendar', label: 'Xem lịch tháng', icon: 'calendar-alt' },
+        { href: '/yearly', label: 'Xem lịch năm', icon: 'calendar-check' },
+        { href: '/converter', label: 'Đổi lịch âm dương', icon: 'moon' },
+      ],
     },
-    {
-      label: '12 con giáp',
-      icon: 'dragon',
-      dropdown: [
-        { href: '/tu-vi-hom-nay', label: 'Xem tử vi hôm nay' },
-        { href: '/tu-vi-ngay-mai', label: 'Xem tử vi ngày mai' },
-      ]
-    },
-    {
-      label: '12 cung hoàng đạo',
-      icon: 'star',
-      dropdown: [
-        { href: '/cung-hoang-dao', label: 'Tử vi hàng ngày' },
-      ]
-    },
-    { label: 'Tướng số', icon: 'eye', href: '/tuong-so' },
-    { label: 'Phong thủy', icon: 'yin-yang', href: '/phong-thuy' },
+    { label: 'Xem lịch tháng', icon: 'calendar-alt', href: '/calendar' },
+    { label: 'Xem lịch năm', icon: 'calendar-check', href: '/yearly' },
+    { label: 'Nhắc nhở sự kiện', icon: 'bell', href: '/reminders' },
     {
       label: 'Tiện ích',
-      icon: 'tools',
+      icon: 'toolbox',
       dropdown: [
-        { href: '/countdown', label: 'Đếm ngược Tết' },
-        { href: '/reminders', label: 'Nhắc nhở sự kiện' },
-        { href: '/events', label: 'Ngày lễ năm 2025' },
-      ]
+        { href: '/countdown', label: 'Đếm ngược Tết', icon: 'hourglass-half' },
+        { href: '/reminders', label: 'Nhắc nhở sự kiện', icon: 'bell' },
+        { href: '/events', label: 'Ngày lễ năm 2025', icon: 'gift' },
+      ],
     },
   ];
+  
 
   return (
     <>

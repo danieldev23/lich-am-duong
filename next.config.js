@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ['@prisma/client', 'bcryptjs'],
+  serverExternalPackages: ["@prisma/client", "bcryptjs"],
   images: {
-    domains: ['ngaydep.com'],
+    domains: ["*"],
   },
   env: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
