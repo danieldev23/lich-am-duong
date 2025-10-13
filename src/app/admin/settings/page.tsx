@@ -1,121 +1,89 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-interface Setting {
-  id: string;
-  key: string;
-  value: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSettings } from "@/hooks/useSettings";
 
 export default function AdminSettingsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [settings, setSettings] = useState<Setting[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { settings, isLoading, error, getSetting, refetch, updateSettings } =
+    useSettings();
+
   const [showModal, setShowModal] = useState(false);
-  const [editingSetting, setEditingSetting] = useState<Setting | null>(null);
+  const [editingKey, setEditingKey] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    key: '',
-    value: '',
-    description: ''
+    key: "",
+    value: "",
+    description: "",
   });
 
   useEffect(() => {
-    if (status === 'loading') return;
-    
-    if (!session || (session.user as any)?.role !== 'admin') {
-      router.push('/admin/login');
+    if (status === "loading") return;
+    if (!session || (session.user as any)?.role !== "admin") {
+      router.push("/admin/login");
       return;
     }
-
-    fetchSettings();
   }, [session, status, router]);
 
-  const fetchSettings = async () => {
-    try {
-      const response = await fetch('/api/admin/settings');
-      const data = await response.json();
-      if (data.success) {
-        setSettings(data.data);
-      }
-    } catch (error) {
-      console.error('Error fetching settings:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    try {
-      const response = await fetch('/api/admin/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      if (response.ok) {
-        fetchSettings();
-        setShowModal(false);
-        setEditingSetting(null);
-        setFormData({ key: '', value: '', description: '' });
-      }
-    } catch (error) {
-      console.error('Error saving setting:', error);
-    }
-  };
-
-  const handleEdit = (setting: Setting) => {
-    setEditingSetting(setting);
+  const handleEdit = (key: string) => {
+    setEditingKey(key);
     setFormData({
-      key: setting.key,
-      value: setting.value,
-      description: setting.description || ''
+      key,
+      value: settings[key] ?? "",
+      description: "",
     });
     setShowModal(true);
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await fetch("/api/admin/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    setShowModal(false);
+    setEditingKey(null);
+    setFormData({ key: "", value: "", description: "" });
+    refetch();
+  };
+
   const defaultSettings = [
     {
-      key: 'site_title',
-      value: 'Lịch Âm Dương Việt Nam',
-      description: 'Tiêu đề trang web'
+      key: "site_title",
+      value: "Lịch Âm Dương Việt Nam",
+      description: "Tiêu đề trang web",
     },
     {
-      key: 'site_description',
-      value: 'Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo',
-      description: 'Mô tả trang web'
+      key: "site_description",
+      value: "Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo",
+      description: "Mô tả trang web",
     },
     {
-      key: 'contact_email',
-      value: 'contact@lichamduong.com',
-      description: 'Email liên hệ'
+      key: "contact_email",
+      value: "contact@lichamduong.com",
+      description: "Email liên hệ",
     },
     {
-      key: 'timezone',
-      value: 'Asia/Ho_Chi_Minh',
-      description: 'Múi giờ hệ thống'
+      key: "timezone",
+      value: "Asia/Ho_Chi_Minh",
+      description: "Múi giờ hệ thống",
     },
     {
-      key: 'enable_notifications',
-      value: 'true',
-      description: 'Bật thông báo email'
+      key: "enable_notifications",
+      value: "true",
+      description: "Bật thông báo email",
     },
     {
-      key: 'max_reminders_per_user',
-      value: '10',
-      description: 'Số lượng nhắc nhở tối đa mỗi người dùng'
-    }
+      key: "max_reminders_per_user",
+      value: "10",
+      description: "Số lượng nhắc nhở tối đa mỗi người dùng",
+    },
   ];
 
-  if (status === 'loading' || isLoading) {
+  if (status === "loading" || isLoading) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
@@ -134,24 +102,23 @@ export default function AdminSettingsPage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => router.push('/admin')}
-                className="text-neutral-600 hover:text-primary"
-              >
+                onClick={() => router.push("/admin")}
+                className="text-neutral-600 hover:text-primary">
                 <i className="fas fa-arrow-left mr-2"></i>
                 Quay lại Dashboard
               </button>
               <div className="w-px h-6 bg-neutral-300"></div>
-              <h1 className="text-xl font-bold text-primary">Cài Đặt Hệ Thống</h1>
+              <h1 className="text-xl font-bold text-primary">
+                Cài Đặt Hệ Thống
+              </h1>
             </div>
-            
             <button
               onClick={() => {
-                setEditingSetting(null);
-                setFormData({ key: '', value: '', description: '' });
+                setEditingKey(null);
+                setFormData({ key: "", value: "", description: "" });
                 setShowModal(true);
               }}
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
-            >
+              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">
               <i className="fas fa-plus mr-2"></i>
               Thêm Cài Đặt
             </button>
@@ -161,7 +128,7 @@ export default function AdminSettingsPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Quick Setup */}
-        {settings.length === 0 && (
+        {Object.keys(settings).length === 0 && (
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-8">
             <h3 className="text-lg font-semibold text-blue-800 mb-4">
               <i className="fas fa-rocket mr-2"></i>
@@ -173,16 +140,15 @@ export default function AdminSettingsPage() {
             <button
               onClick={async () => {
                 for (const setting of defaultSettings) {
-                  await fetch('/api/admin/settings', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(setting)
+                  await fetch("/api/admin/settings", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(setting),
                   });
                 }
-                fetchSettings();
+                refetch();
               }}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
               Tạo Cài Đặt Mặc Định
             </button>
           </div>
@@ -190,29 +156,24 @@ export default function AdminSettingsPage() {
 
         {/* Settings Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {settings.map((setting) => (
-            <div key={setting.id} className="bg-white rounded-xl shadow-lg p-6">
+          {Object.entries(settings).map(([key, value]) => (
+            <div key={key} className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-neutral-800">{setting.key}</h3>
-                  {setting.description && (
-                    <p className="text-sm text-neutral-600 mt-1">{setting.description}</p>
-                  )}
+                  <h3 className="text-lg font-semibold text-neutral-800">
+                    {key}
+                  </h3>
                 </div>
                 <button
-                  onClick={() => handleEdit(setting)}
-                  className="text-blue-600 hover:text-blue-800 transition-colors"
-                >
+                  onClick={() => handleEdit(key)}
+                  className="text-blue-600 hover:text-blue-800 transition-colors">
                   <i className="fas fa-edit"></i>
                 </button>
               </div>
-              
               <div className="bg-neutral-50 rounded-lg p-3">
-                <p className="text-sm font-mono text-neutral-700 break-all">{setting.value}</p>
-              </div>
-              
-              <div className="mt-3 text-xs text-neutral-500">
-                Cập nhật: {new Date(setting.updatedAt).toLocaleString('vi-VN')}
+                <p className="text-sm font-mono text-neutral-700 break-all">
+                  {value}
+                </p>
               </div>
             </div>
           ))}
@@ -224,28 +185,25 @@ export default function AdminSettingsPage() {
             <i className="fas fa-info-circle mr-2"></i>
             Thông Tin Hệ Thống
           </h3>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="bg-neutral-50 rounded-lg p-4">
               <div className="text-sm text-neutral-600">Phiên bản</div>
               <div className="font-semibold">v1.0.0</div>
             </div>
-            
             <div className="bg-neutral-50 rounded-lg p-4">
               <div className="text-sm text-neutral-600">Database</div>
               <div className="font-semibold">MySQL</div>
             </div>
-            
             <div className="bg-neutral-50 rounded-lg p-4">
               <div className="text-sm text-neutral-600">Framework</div>
               <div className="font-semibold">Next.js 15</div>
             </div>
-            
             <div className="bg-neutral-50 rounded-lg p-4">
               <div className="text-sm text-neutral-600">Múi giờ</div>
-              <div className="font-semibold">GMT+7</div>
+              <div className="font-semibold">
+                {getSetting("timezone", "GMT+7")}
+              </div>
             </div>
-            
             <div className="bg-neutral-50 rounded-lg p-4">
               <div className="text-sm text-neutral-600">Trạng thái</div>
               <div className="font-semibold text-green-600">
@@ -253,7 +211,6 @@ export default function AdminSettingsPage() {
                 Hoạt động
               </div>
             </div>
-            
             <div className="bg-neutral-50 rounded-lg p-4">
               <div className="text-sm text-neutral-600">Uptime</div>
               <div className="font-semibold">24/7</div>
@@ -267,9 +224,8 @@ export default function AdminSettingsPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl max-w-md w-full p-6">
             <h3 className="text-lg font-bold text-primary mb-4">
-              {editingSetting ? 'Chỉnh Sửa Cài Đặt' : 'Thêm Cài Đặt Mới'}
+              {editingKey ? "Chỉnh Sửa Cài Đặt" : "Thêm Cài Đặt Mới"}
             </h3>
-            
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
@@ -278,27 +234,29 @@ export default function AdminSettingsPage() {
                 <input
                   type="text"
                   value={formData.key}
-                  onChange={(e) => setFormData({ ...formData, key: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, key: e.target.value })
+                  }
                   required
-                  disabled={!!editingSetting}
+                  disabled={!!editingKey}
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-neutral-100"
                   placeholder="site_title"
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Giá trị *
                 </label>
                 <textarea
                   value={formData.value}
-                  onChange={(e) => setFormData({ ...formData, value: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, value: e.target.value })
+                  }
                   required
                   rows={3}
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
                   Mô tả
@@ -306,25 +264,24 @@ export default function AdminSettingsPage() {
                 <input
                   type="text"
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Mô tả cài đặt này"
                 />
               </div>
-
               <div className="flex justify-end space-x-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-neutral-600 hover:text-neutral-800 transition-colors"
-                >
+                  className="px-4 py-2 text-neutral-600 hover:text-neutral-800 transition-colors">
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
-                >
-                  {editingSetting ? 'Cập nhật' : 'Thêm mới'}
+                  className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors">
+                  {editingKey ? "Cập nhật" : "Thêm mới"}
                 </button>
               </div>
             </form>

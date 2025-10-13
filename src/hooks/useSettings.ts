@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { prisma } from "@/lib/prisma";
+import { useState, useEffect } from "react";
 
-interface Settings {
+interface ISettingKeys {
   site_title: string;
   site_description: string;
   contact_email: string;
@@ -11,10 +12,24 @@ interface Settings {
   facebook_url: string;
   twitter_url: string;
   instagram_url: string;
+  enable_affiliate: string;
+}
+
+interface ISetting {
+  id: string;
+  key: string;
+  value: string;
+  description: string;
+  createdAt: string | Date;
+}
+
+interface IData {
+  success: boolean;
+  data: ISetting[];
 }
 
 export function useSettings() {
-  const [settings, setSettings] = useState<Settings | null>(null);
+  const [settings, setSettings] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,29 +40,48 @@ export function useSettings() {
   const fetchSettings = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/settings');
-      const data = await response.json();
-      
-      if (data.success) {
-        setSettings(data.data);
+      const response = await fetch("/api/settings");
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: IData = await response.json();
+      console.log("Data from settings: ", JSON.stringify(data.data));
+
+      if (data.success && data.data) {
+        const settingsMap = data.data.reduce((acc, setting) => {
+          acc[setting.key] = setting.value;
+          return acc;
+        }, {} as Record<string, string>);
+
+        setSettings(settingsMap);
         setError(null);
       } else {
-        setError(data.error || 'Failed to fetch settings');
+        setError("Failed to fetch settings");
       }
     } catch (err) {
-      setError('Network error');
-      console.error('Error fetching settings:', err);
+      const errorMessage = err instanceof Error ? err.message : "Network error";
+      setError(errorMessage);
+      console.error("Error fetching settings:", err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getSetting = (key: keyof Settings, defaultValue: string = '') => {
-    return settings?.[key] || defaultValue;
+  const getSetting = (key: keyof ISettingKeys, defaultValue: string = "") => {
+    return settings[key] ?? defaultValue;
   };
 
-  const isFeatureEnabled = (feature: string) => {
-    return getSetting(feature as keyof Settings) === 'true';
+  const updateSettings = async (
+    settings: Partial<ISetting[]>
+  ): Promise<boolean> => {
+    const data = await prisma.siteSettings.updateMany({ data: settings });
+    console.log(`Updated from use settings: ${data}`);
+    return false;
+  };
+  const isFeatureEnabled = (feature: keyof ISettingKeys) => {
+    return getSetting(feature) === "true";
   };
 
   return {
@@ -55,7 +89,8 @@ export function useSettings() {
     isLoading,
     error,
     getSetting,
+    updateSettings,
     isFeatureEnabled,
-    refetch: fetchSettings
+    refetch: fetchSettings,
   };
 }
