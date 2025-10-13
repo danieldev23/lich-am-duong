@@ -83,9 +83,8 @@ export function ReminderList() {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-primary mb-2">
-          <i className="fas fa-list mr-2"></i>
-          Danh Sách Nhắc Nhở
+        <h2 className="text-2xl font-bold text-emerald-700 mb-2">
+          📋 Danh Sách Nhắc Nhở
         </h2>
         <p className="text-neutral-600">
           Quản lý các nhắc nhở đã tạo
@@ -147,19 +146,19 @@ export function ReminderList() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 <div className="flex items-center text-neutral-600">
-                  <i className="fas fa-calendar mr-2 text-primary"></i>
+                  <i className="fas fa-calendar mr-2 text-emerald-600"></i>
                   <span>{formatDate(reminder.reminderDate)}</span>
                 </div>
                 
                 {reminder.reminderTime && (
                   <div className="flex items-center text-neutral-600">
-                    <i className="fas fa-clock mr-2 text-primary"></i>
+                    <i className="fas fa-clock mr-2 text-emerald-600"></i>
                     <span>{reminder.reminderTime}</span>
                   </div>
                 )}
                 
                 <div className="flex items-center text-neutral-600">
-                  <i className="fas fa-envelope mr-2 text-primary"></i>
+                  <i className="fas fa-envelope mr-2 text-emerald-600"></i>
                   <span className="truncate">{reminder.email}</span>
                 </div>
               </div>
@@ -171,7 +170,7 @@ export function ReminderList() {
                   </span>
                   
                   <div className="flex items-center space-x-2">
-                    <button className="text-xs text-primary hover:text-primary-dark transition-colors">
+                    <button className="text-xs text-emerald-600 hover:text-emerald-700 transition-colors">
                       <i className="fas fa-edit mr-1"></i>
                       Sửa
                     </button>

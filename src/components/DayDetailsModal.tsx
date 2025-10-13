@@ -51,22 +51,22 @@ export function DayDetailsModal() {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white border-b border-neutral-200 p-4 flex justify-between items-center">
-          <h3 className="text-xl font-bold text-primary">
+      <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="sticky top-0 bg-gradient-to-r from-emerald-600 to-green-600 p-4 flex justify-between items-center">
+          <h3 className="text-xl font-bold text-white">
             {getDayName(date.getDay())}, {day}/{month}/{year}
           </h3>
           <button 
             onClick={closeModal}
-            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors text-white"
           >
-            <i className="fas fa-times"></i>
+            ✕
           </button>
         </div>
         
         <div className="p-6 space-y-6">
           {/* Date Info */}
-          <div className="bg-gradient-to-r from-primary to-primary-light p-4 rounded-lg text-white">
+          <div className="bg-gradient-to-r from-emerald-600 to-green-600 p-4 rounded-lg text-white shadow-lg">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <h4 className="font-semibold mb-2">Dương Lịch</h4>
@@ -83,17 +83,17 @@ export function DayDetailsModal() {
           
           {/* Traditional Info */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-neutral-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-primary mb-2">Can Chi</h4>
-              <p className="text-lg">{canChi}</p>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h4 className="font-semibold text-emerald-700 mb-2">Can Chi</h4>
+              <p className="text-lg font-medium">{canChi}</p>
             </div>
-            <div className="bg-neutral-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-primary mb-2">Trực</h4>
-              <p className="text-lg">{truc}</p>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h4 className="font-semibold text-emerald-700 mb-2">Trực</h4>
+              <p className="text-lg font-medium">{truc}</p>
             </div>
-            <div className="bg-neutral-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-primary mb-2">Tiết Khí</h4>
-              <p className="text-lg">{tietKhi}</p>
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <h4 className="font-semibold text-emerald-700 mb-2">Tiết Khí</h4>
+              <p className="text-lg font-medium">{tietKhi || 'Không có'}</p>
             </div>
           </div>
           
@@ -140,16 +140,15 @@ export function DayDetailsModal() {
 
           {/* Events */}
           {dayEvents.length > 0 && (
-            <div className="bg-accent bg-opacity-10 p-4 rounded-lg">
-              <h4 className="font-semibold text-accent mb-3 flex items-center">
-                <i className="fas fa-star mr-2"></i>
-                Sự Kiện & Ngày Lễ
+            <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+              <h4 className="font-semibold text-orange-700 mb-3 flex items-center">
+                ⭐ Sự Kiện & Ngày Lễ
               </h4>
               <div className="space-y-2">
                 {dayEvents.map((event, index) => (
-                  <div key={index} className="bg-white p-3 rounded border-l-4 border-accent">
-                    <h5 className="font-medium text-accent">{event.title}</h5>
-                    <p className="text-sm text-neutral-600 mt-1">{event.desc}</p>
+                  <div key={index} className="bg-white p-3 rounded border-l-4 border-orange-500 shadow-sm">
+                    <h5 className="font-medium text-orange-700">{event.title}</h5>
+                    <p className="text-sm text-gray-600 mt-1">{event.desc}</p>
                   </div>
                 ))}
               </div>

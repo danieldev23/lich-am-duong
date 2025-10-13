@@ -62,15 +62,14 @@ const FEATURES = [
 export function Features() {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-primary mb-6 text-center">
-        <i className="fas fa-star mr-2"></i>
-        Tính Năng Nổi Bật
+      <h2 className="text-2xl font-bold text-emerald-700 mb-6 text-center">
+        ⭐ Tính Năng Nổi Bật
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {FEATURES.map((feature, index) => (
           <Link key={index} href={feature.link}>
-            <div className={`${feature.bgColor} rounded-xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-neutral-100`}>
+            <div className={`${feature.bgColor} rounded-xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-gray-200`}>
               <div className="flex items-center mb-4">
                 <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mr-4`}>
                   <i className={`${feature.icon} text-white text-xl`}></i>
@@ -80,13 +79,12 @@ export function Features() {
                 </h3>
               </div>
               
-              <p className="text-neutral-600 text-sm leading-relaxed mb-4">
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">
                 {feature.description}
               </p>
               
               <div className={`text-sm font-medium ${feature.textColor} flex items-center`}>
-                Khám phá ngay
-                <i className="fas fa-arrow-right ml-2"></i>
+                Khám phá ngay →
               </div>
             </div>
           </Link>
@@ -94,25 +92,22 @@ export function Features() {
       </div>
 
       {/* Call to Action */}
-      <div className="mt-8 text-center bg-gradient-to-r from-primary to-primary-dark rounded-xl p-6 text-white">
+      <div className="mt-8 text-center bg-gradient-to-r from-emerald-600 to-green-600 rounded-xl p-6 text-white shadow-lg">
         <h3 className="text-xl font-bold mb-2">
-          <i className="fas fa-rocket mr-2"></i>
-          Bắt Đầu Sử Dụng Ngay
+          🚀 Bắt Đầu Sử Dụng Ngay
         </h3>
         <p className="mb-4 opacity-90">
           Khám phá tất cả tính năng của lịch âm dương Việt Nam hoàn toàn miễn phí
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/calendar">
-            <button className="bg-white text-primary px-6 py-2 rounded-lg font-medium hover:bg-neutral-100 transition-colors">
-              <i className="fas fa-calendar mr-2"></i>
-              Xem Lịch Tháng
+            <button className="bg-white text-emerald-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
+              📅 Xem Lịch Tháng
             </button>
           </Link>
           <Link href="/converter">
-            <button className="bg-transparent border-2 border-white text-white px-6 py-2 rounded-lg font-medium hover:bg-white hover:text-primary transition-colors">
-              <i className="fas fa-exchange-alt mr-2"></i>
-              Chuyển Đổi Lịch
+            <button className="bg-transparent border-2 border-white text-white px-6 py-2 rounded-lg font-medium hover:bg-white hover:text-emerald-700 transition-colors">
+              🔄 Chuyển Đổi Lịch
             </button>
           </Link>
         </div>

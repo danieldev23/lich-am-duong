@@ -38,25 +38,26 @@ export function FAQ() {
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
-      <h2 className="text-2xl font-bold text-primary mb-6 text-center">
-        <i className="fas fa-question-circle mr-2"></i>
-        Câu Hỏi Thường Gặp
+      <h2 className="text-2xl font-bold text-emerald-700 mb-6 text-center">
+        ❓ Câu Hỏi Thường Gặp
       </h2>
 
       <div className="space-y-4">
         {FAQ_DATA.map((faq, index) => (
-          <div key={index} className="border border-neutral-200 rounded-lg overflow-hidden">
+          <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
             <button
               onClick={() => toggleFAQ(index)}
-              className="w-full px-6 py-4 text-left bg-neutral-50 hover:bg-neutral-100 transition-colors flex items-center justify-between"
+              className="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between"
             >
-              <span className="font-medium text-neutral-800">{faq.question}</span>
-              <i className={`fas fa-chevron-${openIndex === index ? 'up' : 'down'} text-primary transition-transform`}></i>
+              <span className="font-medium text-gray-800">{faq.question}</span>
+              <span className="text-emerald-600 transition-transform">
+                {openIndex === index ? '▲' : '▼'}
+              </span>
             </button>
             
             {openIndex === index && (
-              <div className="px-6 py-4 bg-white border-t border-neutral-200">
-                <p className="text-neutral-600 leading-relaxed">{faq.answer}</p>
+              <div className="px-6 py-4 bg-white border-t border-gray-200">
+                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
               </div>
             )}
           </div>
@@ -64,12 +65,11 @@ export function FAQ() {
       </div>
 
       <div className="mt-6 text-center">
-        <p className="text-sm text-neutral-500 mb-3">
+        <p className="text-sm text-gray-500 mb-3">
           Không tìm thấy câu trả lời bạn cần?
         </p>
-        <button className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors">
-          <i className="fas fa-envelope mr-2"></i>
-          Liên hệ hỗ trợ
+        <button className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors">
+          ✉️ Liên hệ hỗ trợ
         </button>
       </div>
     </div>

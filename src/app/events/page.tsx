@@ -1,7 +1,6 @@
 'use client';
 
 import { Header } from '@/components/Header';
-import { Sidebar } from '@/components/Sidebar';
 import { EVENTS, HOLIDAYS, EVENT_TYPE_COLORS, EVENT_TYPE_ICONS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import { useState, useMemo } from 'react';
@@ -63,18 +62,15 @@ export default function EventsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-beige">
       <Header />
       
-      <div className="flex min-h-screen">
-        <Sidebar />
-        
-        <main className="flex-1 lg:ml-64">
+      <main className="w-full">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-primary mb-2">Sự Kiện & Ngày Lễ</h1>
-              <p className="text-neutral-600">Tổng hợp các ngày lễ, sự kiện lịch sử và văn hóa Việt Nam</p>
+              <h1 className="text-3xl font-bold text-emerald-700 mb-2">Sự Kiện & Ngày Lễ</h1>
+              <p className="text-gray-600">Tổng hợp các ngày lễ, sự kiện lịch sử và văn hóa Việt Nam</p>
             </div>
 
             {/* Filters and Search */}
@@ -89,8 +85,8 @@ export default function EventsPage() {
                       className={cn(
                         "flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors",
                         filter === button.key
-                          ? "bg-primary text-white"
-                          : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
+                          ? "bg-emerald-600 text-white"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       )}
                     >
                       <i className={button.icon}></i>
@@ -164,7 +160,7 @@ export default function EventsPage() {
                                         {event.title}
                                       </h3>
                                       <div className="flex items-center space-x-1">
-                                        <span className="text-xs font-medium text-primary bg-primary bg-opacity-10 px-2 py-1 rounded">
+                                        <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-1 rounded">
                                           {day}/{month}
                                         </span>
                                         {isHoliday && (
@@ -201,7 +197,7 @@ export default function EventsPage() {
 
             {/* Statistics */}
             <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-bold text-primary mb-4">Thống Kê</h3>
+              <h3 className="text-lg font-bold text-emerald-700 mb-4">Thống Kê</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-4 bg-red-50 rounded-lg">
                   <div className="text-2xl font-bold text-red-600">
@@ -221,17 +217,16 @@ export default function EventsPage() {
                   </div>
                   <div className="text-sm text-pink-700">Văn hóa</div>
                 </div>
-                <div className="text-center p-4 bg-primary bg-opacity-10 rounded-lg">
-                  <div className="text-2xl font-bold text-primary">
+                <div className="text-center p-4 bg-emerald-50 rounded-lg">
+                  <div className="text-2xl font-bold text-emerald-700">
                     {EVENTS.length}
                   </div>
-                  <div className="text-sm text-primary">Tổng cộng</div>
+                  <div className="text-sm text-emerald-700">Tổng cộng</div>
                 </div>
               </div>
             </div>
           </div>
-        </main>
-      </div>
+      </main>
     </div>
   );
 }

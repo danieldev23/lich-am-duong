@@ -24,27 +24,30 @@ function CalendarCell({ date, isCurrentMonth, onClick }: CalendarCellProps) {
   const dayEvents = EVENTS.filter(event => event.date === dateStr);
   const hasHoliday = HOLIDAYS.some(h => h.date === dateStr);
   
-  let cellClass = 'p-2 sm:p-3 border border-neutral-200 rounded-lg cursor-pointer transition-all duration-200 min-h-[60px] sm:min-h-[80px] hover:scale-105 hover:shadow-lg';
+  let cellClass = 'p-2 sm:p-3 border border-gray-200 rounded-lg cursor-pointer transition-all duration-200 min-h-[60px] sm:min-h-[80px] hover:scale-105 hover:shadow-lg';
   
   if (!isCurrentMonth) {
     cellClass += ' opacity-30';
   } else if (todayCheck) {
-    cellClass += ' bg-primary text-white ring-2 ring-primary';
+    cellClass += ' bg-emerald-600 text-white ring-2 ring-emerald-500 shadow-lg';
   } else if (isWeekend) {
-    cellClass += ' text-danger';
+    cellClass += ' text-red-500';
   } else {
-    cellClass += ' hover:bg-neutral-100';
+    cellClass += ' hover:bg-emerald-50';
   }
   
   return (
     <div className={cellClass} onClick={onClick}>
       <div className="text-center">
         <div className="text-lg sm:text-xl font-semibold">{day}</div>
-        <div className="text-xs text-neutral-600">{lunar.day}/{lunar.month}</div>
+        <div className={cn(
+          "text-xs",
+          todayCheck ? "text-white" : "text-gray-600"
+        )}>{lunar.day}/{lunar.month}</div>
         {dayEvents.length > 0 && (
           <div className={cn(
             "w-2 h-2 rounded-full mx-auto mt-1",
-            hasHoliday ? "bg-red-500" : "bg-accent"
+            hasHoliday ? "bg-red-500" : "bg-orange-500"
           )} />
         )}
       </div>
@@ -83,40 +86,40 @@ export function MonthlyCalendar() {
     <section className="mb-8">
       <div className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-primary mb-4 sm:mb-0">
+          <h2 className="text-2xl font-bold text-emerald-700 mb-4 sm:mb-0">
             {getMonthName(month)} {year}
           </h2>
           <div className="flex items-center space-x-4">
             <button 
               onClick={goToPreviousMonth}
-              className="p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-700"
             >
-              <i className="fas fa-chevron-left"></i>
+              ←
             </button>
             <button 
               onClick={goToToday}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+              className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
             >
               Hôm nay
             </button>
             <button 
               onClick={goToNextMonth}
-              className="p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-700"
             >
-              <i className="fas fa-chevron-right"></i>
+              →
             </button>
           </div>
         </div>
 
         {/* Calendar Header */}
         <div className="grid grid-cols-7 gap-1 mb-4">
-          <div className="p-3 text-center font-semibold text-danger">CN</div>
-          <div className="p-3 text-center font-semibold">T2</div>
-          <div className="p-3 text-center font-semibold">T3</div>
-          <div className="p-3 text-center font-semibold">T4</div>
-          <div className="p-3 text-center font-semibold">T5</div>
-          <div className="p-3 text-center font-semibold">T6</div>
-          <div className="p-3 text-center font-semibold">T7</div>
+          <div className="p-3 text-center font-semibold text-red-500">CN</div>
+          <div className="p-3 text-center font-semibold text-gray-700">T2</div>
+          <div className="p-3 text-center font-semibold text-gray-700">T3</div>
+          <div className="p-3 text-center font-semibold text-gray-700">T4</div>
+          <div className="p-3 text-center font-semibold text-gray-700">T5</div>
+          <div className="p-3 text-center font-semibold text-gray-700">T6</div>
+          <div className="p-3 text-center font-semibold text-gray-700">T7</div>
         </div>
 
         {/* Calendar Grid */}

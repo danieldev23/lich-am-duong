@@ -42,7 +42,7 @@ export default function RootLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
       </head>
-      <body className={`${inter.variable} font-sans bg-neutral-50 text-neutral-800 antialiased`}>
+      <body className={`${inter.variable} font-sans bg-beige text-gray-800 antialiased`}>
         <Providers>
           {children}
         </Providers>

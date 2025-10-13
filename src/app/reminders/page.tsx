@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Header } from '@/components/Header';
-import { Sidebar } from '@/components/Sidebar';
 import { ReminderForm } from '@/components/ReminderForm';
 import { ReminderList } from '@/components/ReminderList';
 
@@ -14,20 +13,16 @@ export default function RemindersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-beige">
       <Header />
       
-      <div className="flex min-h-screen">
-        <Sidebar />
-        
-        <main className="flex-1 lg:ml-64">
+      <main className="w-full">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-primary mb-2">
-                <i className="fas fa-bell mr-2"></i>
-                Nhắc Nhở
+              <h1 className="text-3xl font-bold text-emerald-700 mb-2">
+                🔔 Nhắc Nhở
               </h1>
-              <p className="text-neutral-600">
+              <p className="text-gray-600">
                 Tạo và quản lý các nhắc nhở, nhận thông báo qua email
               </p>
             </div>
@@ -100,8 +95,7 @@ export default function RemindersPage() {
               </div>
             </div>
           </div>
-        </main>
-      </div>
+      </main>
     </div>
   );
 }

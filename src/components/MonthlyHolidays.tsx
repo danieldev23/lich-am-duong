@@ -5,9 +5,9 @@ import { cn } from '@/lib/utils';
 import { useEvents } from '@/hooks/useEvents';
 
 const EVENT_TYPE_COLORS = {
-  holiday: 'bg-red-100 text-red-800 border-red-200',
-  history: 'bg-blue-100 text-blue-800 border-blue-200', 
-  culture: 'bg-pink-100 text-pink-800 border-pink-200'
+  holiday: 'bg-red-50 text-red-700 border-red-300',
+  history: 'bg-blue-50 text-blue-700 border-blue-300', 
+  culture: 'bg-purple-50 text-purple-700 border-purple-300'
 };
 
 const EVENT_TYPE_ICONS = {
@@ -62,30 +62,29 @@ export function MonthlyHolidays() {
     <div className="bg-white rounded-xl shadow-lg p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-primary">
-          <i className="fas fa-list mr-2"></i>
-          Ngày Lễ Trong {getMonthName(currentMonth)} {currentYear}
+        <h2 className="text-xl font-bold text-emerald-700">
+          📋 Ngày Lễ Trong {getMonthName(currentMonth)} {currentYear}
         </h2>
         
         <div className="flex items-center space-x-2">
           <button
             onClick={goToPreviousMonth}
-            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700"
           >
-            <i className="fas fa-chevron-left text-neutral-600"></i>
+            ←
           </button>
           
-          <div className="px-4 py-2 bg-primary bg-opacity-10 rounded-lg">
-            <span className="text-primary font-medium">
+          <div className="px-4 py-2 bg-emerald-50 rounded-lg border border-emerald-200">
+            <span className="text-emerald-700 font-medium">
               {getMonthName(currentMonth)} {currentYear}
             </span>
           </div>
           
           <button
             onClick={goToNextMonth}
-            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700"
           >
-            <i className="fas fa-chevron-right text-neutral-600"></i>
+            →
           </button>
         </div>
       </div>
@@ -149,7 +148,7 @@ export function MonthlyHolidays() {
       )}
 
       {/* Quick Navigation */}
-      <div className="mt-6 pt-6 border-t border-neutral-200">
+      <div className="mt-6 pt-6 border-t border-gray-200">
         <div className="flex flex-wrap gap-2 justify-center">
           {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
             <button
@@ -158,8 +157,8 @@ export function MonthlyHolidays() {
               className={cn(
                 "px-3 py-1 rounded-lg text-sm font-medium transition-colors",
                 month === currentMonth
-                  ? "bg-primary text-white"
-                  : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                  ? "bg-emerald-600 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               )}
             >
               T{month}
