@@ -44,48 +44,38 @@ export function useEvents() {
   const getUpcomingEvents = (days: number = 30) => {
     const today = new Date();
     const futureDate = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
-    const upcoming: any[] = [];
     
-    // Thêm holidays
-    HOLIDAYS.forEach(holiday => {
-      const [month, day] = holiday.date.split('-').map(Number);
-      const eventDate = new Date(today.getFullYear(), month - 1, day);
-      
-      // Nếu đã qua thì lấy năm sau
-      if (eventDate < today) {
-        eventDate.setFullYear(today.getFullYear() + 1);
-      }
-      
-      if (eventDate <= futureDate) {
-        upcoming.push({
-          ...holiday,
-          date: eventDate,
-          type: 'holiday' as const,
-          title: holiday.name
-        });
+    // Kết hợp và chuẩn hóa data
+    const allItems = [
+      ...HOLIDAYS.map(h => ({ ...h, type: 'holiday' as const, title: h.name })),
+      ...events
+    ];
+    
+    const upcoming = allItems
+      .map(item => {
+        const [month, day] = item.date.split('-').map(Number);
+        const eventDate = new Date(today.getFullYear(), month - 1, day);
+        
+        // Nếu đã qua thì lấy năm sau
+        if (eventDate < today) {
+          eventDate.setFullYear(today.getFullYear() + 1);
+        }
+        
+        return { ...item, date: eventDate };
+      })
+      .filter(item => item.date <= futureDate);
+    
+    // Loại bỏ duplicate dựa trên title + date
+    const uniqueMap = new Map();
+    upcoming.forEach(item => {
+      const key = `${item.title || item.name}-${item.date.toDateString()}`;
+      if (!uniqueMap.has(key)) {
+        uniqueMap.set(key, item);
       }
     });
     
-    // Thêm events
-    events.forEach(event => {
-      const [month, day] = event.date.split('-').map(Number);
-      const eventDate = new Date(today.getFullYear(), month - 1, day);
-      
-      // Nếu đã qua thì lấy năm sau
-      if (eventDate < today) {
-        eventDate.setFullYear(today.getFullYear() + 1);
-      }
-      
-      if (eventDate <= futureDate) {
-        upcoming.push({
-          ...event,
-          date: eventDate
-        });
-      }
-    });
-    
-    // Sắp xếp theo ngày và giới hạn số lượng
-    return upcoming
+    // Sắp xếp và giới hạn
+    return Array.from(uniqueMap.values())
       .sort((a, b) => a.date.getTime() - b.date.getTime())
       .slice(0, 10);
   };

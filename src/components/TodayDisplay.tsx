@@ -19,10 +19,38 @@ const QUOTES = [
   { text: "Việc gì khó, đã có trời xanh", author: "Tục ngữ Việt Nam" },
 ];
 
+const backgroundImages = [
+  // Spring
+  "https://images.unsplash.com/uploads/1412748786298aacc1dc7/f2e5b5da?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1602790032293-c423e6695b1d?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1526344966-89049886b28d?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1708292215628-450310462908?w=1920&h=1080&fit=crop&q=80",
+  "https://plus.unsplash.com/premium_photo-1711174678635-ebfc6045ea25?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1493589976221-c2357c31ad77?w=1920&h=1080&fit=crop&q=80",
+
+  // Summer
+  "https://plus.unsplash.com/premium_photo-1666273145291-3a6323d4388f?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1618462611075-b68978a37db3?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1753246281088-51bbd10df0f2?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1587462710036-1969570afa6b?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1622901641231-a570d784e5e3?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1603346996604-cd77fc859e1d?w=1920&h=1080&fit=crop&q=80",
+
+  // Autumn
+  "https://images.unsplash.com/photo-1506193503569-d57d2a678510?w=1920&h=1080&fit=crop&q=80",
+  "https://plus.unsplash.com/premium_photo-1665956065478-eb9409e11a9b?w=1920&h=1080&fit=crop&q=80",
+  "https://plus.unsplash.com/premium_photo-1669295395788-2c22b1431f24?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1572541406051-5577a5688b88?w=1920&h=1080&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1613322389906-bbe0451c1dde?w=1920&h=1080&fit=crop&q=80",
+  "https://plus.unsplash.com/premium_photo-1694169633460-c7cb39acc472?w=1920&h=1080&fit=crop&q=80",
+];
+
+
 export function TodayDisplay() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [mounted, setMounted] = useState(false);
   const [quote, setQuote] = useState(QUOTES[0]);
+  const [backgroundImg, setBackgroundImg] = useState(backgroundImages[0]);
   
   // State cho date picker
   const [pickerDay, setPickerDay] = useState(new Date().getDate());
@@ -43,6 +71,7 @@ export function TodayDisplay() {
 
   const randomizeQuote = () => {
     setQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
+    setBackgroundImg(backgroundImages[Math.floor(Math.random() * backgroundImages.length)])
   };
 
   const goToPreviousDay = () => {
@@ -210,112 +239,148 @@ export function TodayDisplay() {
         </div>
       </div>
 
-      <div className="p-6">
-        {/* Heading */}
-        <div className="text-center mb-6">
-          <h3 className="text-2xl font-bold text-gray-800 mb-2">☯ LỊCH ÂM HÔM NAY</h3>
-        </div>
+      <div 
+        className="p-6 huy bg-cover bg-center bg-no-repeat relative"
+        style={{ 
+          backgroundImage: `url(${backgroundImg})`,
+        }}
+      >
+        {/* Overlay để làm nổi nội dung */}
+        <div className="absolute inset-0 bg-white/40"></div>
+        
+        {/* Content wrapper - Horizontal layout for desktop, vertical for mobile */}
+        <div className="relative z-10">
+          {/* Heading */}
+          {/* <div className="text-center mb-4">
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">☯ LỊCH DƯƠNG HÔM NAY</h3>
+          </div> */}
 
-        {/* Số ngày lớn */}
-        <div className="text-center mb-4">
-          <div className="text-[100px] leading-none font-bold text-accent mb-2">
-            {day}
-          </div>
-          <div className="text-gray-700 text-sm mb-2">
-            • Ngày dương lịch: <span className="font-semibold">{day}/{month}/{year} {getDayName(dayOfWeek)}</span>
-          </div>
-          {todayHolidays.length > 0 && (
-            <div className="inline-block bg-accent text-white px-6 py-2 rounded-full font-medium text-sm">
-              ⭐ {todayHolidays[0].name}
+          {/* Main horizontal container */}
+          <div className="flex flex-col lg:flex-row gap-6 mb-4">
+            {/* Left Side - Solar Date (Dương lịch) */}
+            <div className="flex-1 bg-white/80 rounded-lg p-6 border-2 border-gray-200">
+              <div className="text-center mb-2">
+                <h4 className="text-lg font-bold text-gray-700 mb-3">DƯƠNG LỊCH</h4>
+              </div>
+              
+              <div className="text-center">
+                <div className="text-[120px] leading-none font-bold text-accent mb-2">
+                  <span
+                    style={{
+                      WebkitTextStroke: "2px white",
+                      color: "red",
+                    }}
+                  >
+                    {day}
+                  </span>
+                </div>
+                <div className="text-lg font-semibold text-gray-800 mb-2">
+                  Tháng {month} Năm {year}
+                </div>
+                <div className="text-base font-medium text-gray-700 mb-3">
+                  {getDayName(dayOfWeek)}
+                </div>
+                {todayHolidays.length > 0 && (
+                  <div className="inline-block bg-accent text-white px-6 py-2 rounded-full font-medium text-sm">
+                    ⭐ {todayHolidays[0].name}
+                  </div>
+                )}
+              </div>
             </div>
-          )}
-        </div>
 
-        {/* Thông tin Âm Dương - 2 màu */}
-        <div className="bg-gradient-to-r from-yellow-50 via-beige-100 to-yellow-50 rounded-lg p-6 mb-6 border border-yellow-200">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            {/* Cột trái - Ngày âm lịch */}
-            <div className="space-y-1">
-              <div className="text-xs text-gray-600">Ngày</div>
-              <div className="font-bold text-gray-800">{canChi}</div>
-              <div className="text-xs text-gray-600 mt-2">Tháng</div>
-              <div className="font-semibold text-gray-700">Ất Dậu</div>
-              <div className="text-xs text-gray-600 mt-2">Năm</div>
-              <div className="font-semibold text-gray-700">Ất Tỵ</div>
-            </div>
+            {/* Right Side - Lunar Date (Âm lịch) */}
+            <div className="flex-1 bg-gradient-to-r from-yellow-50 via-beige-100 to-yellow-50 rounded-lg p-6 border-2 border-yellow-200">
+              <div className="text-center mb-2">
+                <h4 className="text-lg font-bold text-gray-700 mb-3">ÂM LỊCH</h4>
+              </div>
+              
+              <div className="grid grid-cols-3 gap-4 text-center mb-4">
+                {/* Cột trái - Can Chi */}
+                <div className="space-y-1">
+                  <div className="text-xs text-gray-600">Ngày</div>
+                  <div className="font-bold text-gray-800">{canChi}</div>
+                  <div className="text-xs text-gray-600 mt-2">Tháng</div>
+                  <div className="font-semibold text-gray-700">Ất Dậu</div>
+                  <div className="text-xs text-gray-600 mt-2">Năm</div>
+                  <div className="font-semibold text-gray-700">Ất Tỵ</div>
+                </div>
 
-            {/* Cột giữa - Tháng âm lớn */}
-            <div className="border-x border-yellow-300">
-              <div className="text-sm text-gray-700 font-semibold mb-1">
-                THÁNG {lunar.month} {lunar.isLeapMonth ? '(NHUẬN)' : '(THIẾU)'}
-              </div>
-              <div className="text-6xl font-bold text-primary my-2">
-                {lunar.day}
-              </div>
-              {/* Con giáp icon */}
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-full text-white text-2xl">
-                🐍
-              </div>
-            </div>
+                {/* Cột giữa - Ngày âm lớn */}
+                <div className="border-x border-yellow-300">
+                  <div className="text-sm text-gray-700 font-semibold mb-1">
+                    THÁNG {lunar.month} {lunar.isLeapMonth ? '(NHUẬN)' : '(THIẾU)'}
+                  </div>
+                  <div className="text-6xl font-bold text-primary my-2">
+                    {lunar.day}
+                  </div>
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-full text-white text-2xl">
+                    🐍
+                  </div>
+                </div>
 
-            {/* Cột phải - Thông tin */}
-            <div className="space-y-1">
-              <div className="text-xs text-gray-600">Ngày</div>
-              <div className="font-bold text-primary">Tứ Mệnh Hoàng Đạo</div>
-              <div className="text-xs text-gray-600 mt-2">Trực</div>
-              <div className="font-semibold text-gray-700">{truc}</div>
-              <div className="text-xs text-gray-600 mt-2">Tiết khí</div>
-              <div className="font-semibold text-gray-700">{tietKhi || 'Hàn Lộ'}</div>
+                {/* Cột phải - Thông tin */}
+                <div className="space-y-1">
+                  <div className="text-xs text-gray-600">Ngày</div>
+                  <div className="font-bold text-primary text-sm">Tứ Mệnh Hoàng Đạo</div>
+                  <div className="text-xs text-gray-600 mt-2">Trực</div>
+                  <div className="font-semibold text-gray-700">{truc}</div>
+                  <div className="text-xs text-gray-600 mt-2">Tiết khí</div>
+                  <div className="font-semibold text-gray-700">{tietKhi || 'Hàn Lộ'}</div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Giờ Hoàng Đạo */}
-        <div className="mb-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-2">
-            <i className="fas fa-star text-yellow-500 mr-1"></i>
-            Giờ đẹp (tốt cho mọi việc):
-          </h4>
-          <div className="flex flex-wrap gap-2">
-            {hoangDao.map((gio, index) => (
-              <div key={index} className="bg-green-50 border border-green-300 px-4 py-2 rounded">
-                <span className="font-bold text-green-700">{gio.chi}</span>
-                <span className="text-xs text-green-600 ml-1">({gio.time})</span>
+          {/* Giờ Hoàng Đạo và Hắc Đạo */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+            {/* Giờ Hoàng Đạo */}
+            <div className="bg-white/80 rounded-lg p-4 border border-gray-200">
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                <i className="fas fa-star text-yellow-500 mr-1"></i>
+                Giờ hoàng đạo (tốt cho mọi việc):
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {hoangDao.map((gio, index) => (
+                  <div key={index} className="bg-green-50 border border-green-300 px-4 py-2 rounded">
+                    <span className="font-bold text-green-700">{gio.chi}</span>
+                    <span className="text-xs text-green-600 ml-1">({gio.time})</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* Giờ Hắc Đạo */}
-        <div className="mb-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-2">
-            <i className="fas fa-times-circle text-red-500 mr-1"></i>
-            Giờ xấu (nên tránh):
-          </h4>
-          <div className="flex flex-wrap gap-2">
-            {hacDao.map((gio, index) => (
-              <div key={index} className="bg-red-50 border border-red-300 px-4 py-2 rounded">
-                <span className="font-bold text-red-700">{gio.chi}</span>
-                <span className="text-xs text-red-600 ml-1">({gio.time})</span>
+            {/* Giờ Hắc Đạo */}
+            <div className="bg-white/80 rounded-lg p-4 border border-gray-200">
+              <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                <i className="fas fa-times-circle text-red-500 mr-1"></i>
+                Giờ hắc đạo (nên tránh):
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {hacDao.map((gio, index) => (
+                  <div key={index} className="bg-red-50 border border-red-300 px-4 py-2 rounded">
+                    <span className="font-bold text-red-700">{gio.chi}</span>
+                    <span className="text-xs text-red-600 ml-1">({gio.time})</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-        </div>
 
-        {/* Quote */}
-        <div className="border-t border-gray-200 pt-4 text-center">
-          <p className="text-sm italic text-gray-600 mb-1">"{quote.text}"</p>
-          <p className="text-xs text-gray-500">- {quote.author} -</p>
-        </div>
+          {/* Quote */}
+          <div className="bg-white/80 rounded-lg p-4 border border-gray-200 text-center">
+            <p className="text-sm italic text-gray-600 mb-1">"{quote.text}"</p>
+            <p className="text-xs text-gray-500">- {quote.author} -</p>
+          </div>
 
-        {/* View detail link */}
-        <div className="text-center mt-4">
-          <Link 
-            href="/calendar"
-            className="text-primary hover:text-primary-dark text-sm font-medium hover:underline"
-          >
-            Xem chi tiết ngày tốt xấu hôm nay →
-          </Link>
+          {/* View detail link */}
+          <div className="text-center mt-4">
+            <Link 
+              href="/calendar"
+              className="text-primary hover:text-primary-dark text-sm font-medium hover:underline bg-white/80 px-4 py-2 rounded inline-block"
+            >
+              Xem chi tiết ngày tốt xấu hôm nay →
+            </Link>
+          </div>
         </div>
       </div>
     </div>

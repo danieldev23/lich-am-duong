@@ -75,7 +75,7 @@ export function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2 text-white hover:opacity-90 transition-opacity">
               <div className="flex flex-col leading-tight">
-                <span className="text-2xl font-bold tracking-wide">NGÀY ĐẸP.com</span>
+                <span className="text-2xl font-bold tracking-wide">NGAYDEP.COM</span>
                 <span className="text-xs opacity-90">Xem lịch âm - Xem ngày tốt xấu</span>
               </div>
             </Link>
