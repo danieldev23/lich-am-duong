@@ -236,7 +236,7 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
               "w-full py-3 px-6 rounded-lg font-medium transition-all",
               isSubmitting
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-emerald-600 hover:bg-emerald-700 text-white hover:shadow-lg transform hover:-translate-y-0.5"
+                : "bg-primary hover:bg-primary text-white hover:shadow-lg transform hover:-translate-y-0.5"
             )}
           >
             {isSubmitting ? (

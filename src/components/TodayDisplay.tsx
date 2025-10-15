@@ -378,7 +378,7 @@ export function TodayDisplay() {
               href="/calendar"
               className="text-primary hover:text-primary-dark text-sm font-medium hover:underline bg-white/80 px-4 py-2 rounded inline-block"
             >
-              Xem chi tiết ngày tốt xấu hôm nay →
+              Chuyển lịch âm dương tại đây →
             </Link>
           </div>
         </div>

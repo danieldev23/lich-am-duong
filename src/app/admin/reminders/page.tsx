@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Reminder {
   id: string;
@@ -11,7 +11,7 @@ interface Reminder {
   date: string;
   email: string;
   isEmailSent: boolean;
-  status: 'PENDING' | 'SENT' | 'CANCELLED';
+  status: "PENDING" | "SENT" | "CANCELLED";
   user?: {
     name?: string;
     email: string;
@@ -26,17 +26,17 @@ export default function AdminRemindersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    date: '',
-    email: ''
+    title: "",
+    description: "",
+    date: "",
+    email: "",
   });
 
   useEffect(() => {
-    if (status === 'loading') return;
-    
-    if (!session || (session.user as any)?.role !== 'admin') {
-      router.push('/admin/login');
+    if (status === "loading") return;
+
+    if (!session || (session.user as any)?.role !== "admin") {
+      router.push("/admin/login");
       return;
     }
 
@@ -45,13 +45,13 @@ export default function AdminRemindersPage() {
 
   const fetchReminders = async () => {
     try {
-      const response = await fetch('/api/admin/reminders');
+      const response = await fetch("/api/admin/reminders");
       const data = await response.json();
       if (data.success) {
         setReminders(data.data);
       }
     } catch (error) {
-      console.error('Error fetching reminders:', error);
+      console.error("Error fetching reminders:", error);
     } finally {
       setIsLoading(false);
     }
@@ -59,45 +59,53 @@ export default function AdminRemindersPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
-      const response = await fetch('/api/admin/reminders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+      const response = await fetch("/api/admin/reminders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         fetchReminders();
         setShowModal(false);
-        setFormData({ title: '', description: '', date: '', email: '' });
+        setFormData({ title: "", description: "", date: "", email: "" });
       }
     } catch (error) {
-      console.error('Error creating reminder:', error);
+      console.error("Error creating reminder:", error);
     }
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'PENDING': return 'Chờ gửi';
-      case 'SENT': return 'Đã gửi';
-      case 'CANCELLED': return 'Đã hủy';
-      default: return status;
+      case "PENDING":
+        return "Chờ gửi";
+      case "SENT":
+        return "Đã gửi";
+      case "CANCELLED":
+        return "Đã hủy";
+      default:
+        return status;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PENDING': return 'bg-yellow-100 text-yellow-800';
-      case 'SENT': return 'bg-green-100 text-green-800';
-      case 'CANCELLED': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "PENDING":
+        return "bg-yellow-100 text-yellow-800";
+      case "SENT":
+        return "bg-green-100 text-green-800";
+      case "CANCELLED":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
-  if (status === 'loading' || isLoading) {
+  if (status === "loading" || isLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <div className="min-h-screen bg-beige flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-neutral-600">Đang tải...</p>
@@ -107,29 +115,36 @@ export default function AdminRemindersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-beige">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => router.push('/admin')}
+                onClick={() => router.push("/admin")}
                 className="text-neutral-600 hover:text-primary transition-colors"
               >
                 <i className="fas fa-arrow-left mr-2"></i>
                 Quay lại Dashboard
               </button>
               <div className="w-px h-6 bg-neutral-300"></div>
-              <h1 className="text-xl font-bold text-primary">Quản Lý Nhắc Nhở</h1>
+              <h1 className="text-xl font-bold text-emerald-700">
+                Quản Lý Nhắc Nhở
+              </h1>
             </div>
-            
+
             <button
               onClick={() => {
-                setFormData({ title: '', description: '', date: '', email: '' });
+                setFormData({
+                  title: "",
+                  description: "",
+                  date: "",
+                  email: "",
+                });
                 setShowModal(true);
               }}
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors"
             >
               <i className="fas fa-plus mr-2"></i>
               Thêm Nhắc Nhở
@@ -148,7 +163,9 @@ export default function AdminRemindersPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-neutral-600">Tổng nhắc nhở</p>
-                <p className="text-2xl font-bold text-blue-500">{reminders.length}</p>
+                <p className="text-2xl font-bold text-blue-500">
+                  {reminders.length}
+                </p>
               </div>
             </div>
           </div>
@@ -161,7 +178,7 @@ export default function AdminRemindersPage() {
               <div className="ml-4">
                 <p className="text-sm text-neutral-600">Chờ gửi</p>
                 <p className="text-2xl font-bold text-yellow-500">
-                  {reminders.filter(r => r.status === 'PENDING').length}
+                  {reminders.filter((r) => r.status === "PENDING").length}
                 </p>
               </div>
             </div>
@@ -175,7 +192,7 @@ export default function AdminRemindersPage() {
               <div className="ml-4">
                 <p className="text-sm text-neutral-600">Đã gửi</p>
                 <p className="text-2xl font-bold text-green-500">
-                  {reminders.filter(r => r.status === 'SENT').length}
+                  {reminders.filter((r) => r.status === "SENT").length}
                 </p>
               </div>
             </div>
@@ -189,7 +206,7 @@ export default function AdminRemindersPage() {
               <div className="ml-4">
                 <p className="text-sm text-neutral-600">Đã hủy</p>
                 <p className="text-2xl font-bold text-red-500">
-                  {reminders.filter(r => r.status === 'CANCELLED').length}
+                  {reminders.filter((r) => r.status === "CANCELLED").length}
                 </p>
               </div>
             </div>
@@ -202,32 +219,51 @@ export default function AdminRemindersPage() {
             <table className="w-full">
               <thead className="bg-neutral-50">
                 <tr>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Tiêu đề</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Email</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Ngày nhắc</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Trạng thái</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Tạo lúc</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Mô tả</th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Tiêu đề
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Email
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Ngày nhắc
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Trạng thái
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Tạo lúc
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Mô tả
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {reminders.map((reminder) => (
-                  <tr key={reminder.id} className="border-b border-neutral-100 hover:bg-neutral-50">
+                  <tr
+                    key={reminder.id}
+                    className="border-b border-neutral-100 hover:bg-neutral-50"
+                  >
                     <td className="py-4 px-6 font-medium">{reminder.title}</td>
                     <td className="py-4 px-6">{reminder.email}</td>
                     <td className="py-4 px-6">
-                      {new Date(reminder.date).toLocaleDateString('vi-VN')}
+                      {new Date(reminder.date).toLocaleDateString("vi-VN")}
                     </td>
                     <td className="py-4 px-6">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(reminder.status)}`}>
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                          reminder.status
+                        )}`}
+                      >
                         {getStatusLabel(reminder.status)}
                       </span>
                     </td>
                     <td className="py-4 px-6 text-sm text-neutral-600">
-                      {new Date(reminder.createdAt).toLocaleDateString('vi-VN')}
+                      {new Date(reminder.createdAt).toLocaleDateString("vi-VN")}
                     </td>
                     <td className="py-4 px-6 text-sm text-neutral-600 max-w-xs truncate">
-                      {reminder.description || '-'}
+                      {reminder.description || "-"}
                     </td>
                   </tr>
                 ))}
@@ -251,7 +287,7 @@ export default function AdminRemindersPage() {
             <h3 className="text-lg font-bold text-primary mb-4">
               Thêm Nhắc Nhở Mới
             </h3>
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
@@ -260,7 +296,9 @@ export default function AdminRemindersPage() {
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   required
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
@@ -273,7 +311,9 @@ export default function AdminRemindersPage() {
                 <input
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   required
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
@@ -286,7 +326,9 @@ export default function AdminRemindersPage() {
                 <input
                   type="datetime-local"
                   value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, date: e.target.value })
+                  }
                   required
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
@@ -298,7 +340,9 @@ export default function AdminRemindersPage() {
                 </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   rows={3}
                   className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 />

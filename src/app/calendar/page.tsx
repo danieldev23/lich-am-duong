@@ -4,7 +4,6 @@ import { Header } from "@/components/Header";
 import { MonthlyCalendar } from "@/components/MonthlyCalendar";
 import { MonthlyHolidays } from "@/components/MonthlyHolidays";
 import { DayDetailsModal } from "@/components/DayDetailsModal";
-import { useSettings } from "@/hooks/useSettings";
 
 export default function CalendarPage() {
   return (
