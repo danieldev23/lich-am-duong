@@ -5,3 +5,15 @@ DATABASE_URL="mysql://dangquochuy:Huydev2005%40@103.249.201.108:3306/lich_am_duo
 NEXTAUTH_URL="http://localhost:3000"
 NEXT_PUBLIC_API_URL=http://localhost:3000
 NEXTAUTH_SECRET="your-secret-key-here"
+
+# Email (choose Gmail service or SMTP)
+# For Gmail App Passwords, set EMAIL_SERVICE=gmail and provide EMAIL_USER/EMAIL_PASS
+EMAIL_SERVICE=gmail
+EMAIL_USER="your-email@example.com"
+EMAIL_PASS="your-app-password"
+
+# Or use custom SMTP:
+# EMAIL_HOST="smtp.example.com"
+# EMAIL_PORT=587
+# EMAIL_SECURE=false
+# EMAIL_FROM="Calendar <no-reply@example.com>"

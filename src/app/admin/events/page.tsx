@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface Event {
   id: string;
   title: string;
   description?: string;
   date: string;
-  type: 'HOLIDAY' | 'HISTORY' | 'CULTURE';
+  type: "HOLIDAY" | "HISTORY" | "CULTURE";
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -23,17 +23,17 @@ export default function AdminEventsPage() {
   const [showModal, setShowModal] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    date: '',
-    type: 'HOLIDAY' as 'HOLIDAY' | 'HISTORY' | 'CULTURE'
+    title: "",
+    description: "",
+    date: "",
+    type: "HOLIDAY" as "HOLIDAY" | "HISTORY" | "CULTURE",
   });
 
   useEffect(() => {
-    if (status === 'loading') return;
-    
-    if (!session || (session.user as any)?.role !== 'admin') {
-      router.push('/admin/login');
+    if (status === "loading") return;
+
+    if (!session || (session.user as any)?.role !== "admin") {
+      router.push("/admin/login");
       return;
     }
 
@@ -42,13 +42,13 @@ export default function AdminEventsPage() {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('/api/admin/events');
+      const response = await fetch("/api/admin/events");
       const data = await response.json();
       if (data.success) {
         setEvents(data.data);
       }
     } catch (error) {
-      console.error('Error fetching events:', error);
+      console.error("Error fetching events:", error);
     } finally {
       setIsLoading(false);
     }
@@ -56,25 +56,27 @@ export default function AdminEventsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
-      const url = editingEvent ? `/api/admin/events/${editingEvent.id}` : '/api/admin/events';
-      const method = editingEvent ? 'PUT' : 'POST';
-      
+      const url = editingEvent
+        ? `/api/admin/events/${editingEvent.id}`
+        : "/api/admin/events";
+      const method = editingEvent ? "PUT" : "POST";
+
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         fetchEvents();
         setShowModal(false);
         setEditingEvent(null);
-        setFormData({ title: '', description: '', date: '', type: 'HOLIDAY' });
+        setFormData({ title: "", description: "", date: "", type: "HOLIDAY" });
       }
     } catch (error) {
-      console.error('Error saving event:', error);
+      console.error("Error saving event:", error);
     }
   };
 
@@ -82,50 +84,58 @@ export default function AdminEventsPage() {
     setEditingEvent(event);
     setFormData({
       title: event.title,
-      description: event.description || '',
+      description: event.description || "",
       date: event.date,
-      type: event.type
+      type: event.type,
     });
     setShowModal(true);
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Bạn có chắc muốn xóa sự kiện này?')) return;
-    
+    if (!confirm("Bạn có chắc muốn xóa sự kiện này?")) return;
+
     try {
       const response = await fetch(`/api/admin/events/${id}`, {
-        method: 'DELETE'
+        method: "DELETE",
       });
 
       if (response.ok) {
         fetchEvents();
       }
     } catch (error) {
-      console.error('Error deleting event:', error);
+      console.error("Error deleting event:", error);
     }
   };
 
   const getTypeLabel = (type: string) => {
     switch (type) {
-      case 'HOLIDAY': return 'Ngày lễ';
-      case 'HISTORY': return 'Lịch sử';
-      case 'CULTURE': return 'Văn hóa';
-      default: return type;
+      case "HOLIDAY":
+        return "Ngày lễ";
+      case "HISTORY":
+        return "Lịch sử";
+      case "CULTURE":
+        return "Văn hóa";
+      default:
+        return type;
     }
   };
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'HOLIDAY': return 'bg-red-100 text-red-800';
-      case 'HISTORY': return 'bg-blue-100 text-blue-800';
-      case 'CULTURE': return 'bg-pink-100 text-pink-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "HOLIDAY":
+        return "bg-red-100 text-red-800";
+      case "HISTORY":
+        return "bg-blue-100 text-blue-800";
+      case "CULTURE":
+        return "bg-pink-100 text-pink-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
-  if (status === 'loading' || isLoading) {
+  if (status === "loading" || isLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <div className="min-h-screen bg-beige flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-neutral-600">Đang tải...</p>
@@ -135,30 +145,37 @@ export default function AdminEventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-beige">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => router.push('/admin')}
+                onClick={() => router.push("/admin")}
                 className="text-neutral-600 hover:text-primary transition-colors"
               >
                 <i className="fas fa-arrow-left mr-2"></i>
                 Quay lại Dashboard
               </button>
               <div className="w-px h-6 bg-neutral-300"></div>
-              <h1 className="text-xl font-bold text-primary">Quản Lý Sự Kiện</h1>
+              <h1 className="text-xl font-bold text-emerald-700">
+                Quản Lý Sự Kiện
+              </h1>
             </div>
-            
+
             <button
               onClick={() => {
                 setEditingEvent(null);
-                setFormData({ title: '', description: '', date: '', type: 'HOLIDAY' });
+                setFormData({
+                  title: "",
+                  description: "",
+                  date: "",
+                  type: "HOLIDAY",
+                });
                 setShowModal(true);
               }}
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors"
             >
               <i className="fas fa-plus mr-2"></i>
               Thêm Sự Kiện
@@ -174,32 +191,55 @@ export default function AdminEventsPage() {
             <table className="w-full">
               <thead className="bg-neutral-50">
                 <tr>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Ngày</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Tên sự kiện</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Loại</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Mô tả</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Trạng thái</th>
-                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">Thao tác</th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Ngày
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Tên sự kiện
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Loại
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Mô tả
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Trạng thái
+                  </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Thao tác
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {events.map((event) => (
-                  <tr key={event.id} className="border-b border-neutral-100 hover:bg-neutral-50">
+                  <tr
+                    key={event.id}
+                    className="border-b border-neutral-100 hover:bg-neutral-50"
+                  >
                     <td className="py-4 px-6 font-medium">{event.date}</td>
                     <td className="py-4 px-6">{event.title}</td>
                     <td className="py-4 px-6">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(event.type)}`}>
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(
+                          event.type
+                        )}`}
+                      >
                         {getTypeLabel(event.type)}
                       </span>
                     </td>
                     <td className="py-4 px-6 text-sm text-neutral-600 max-w-xs truncate">
-                      {event.description || '-'}
+                      {event.description || "-"}
                     </td>
                     <td className="py-4 px-6">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        event.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {event.isActive ? 'Hoạt động' : 'Tạm dừng'}
+                      <span
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          event.isActive
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {event.isActive ? "Hoạt động" : "Tạm dừng"}
                       </span>
                     </td>
                     <td className="py-4 px-6">
@@ -237,10 +277,10 @@ export default function AdminEventsPage() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl max-w-md w-full p-6">
-            <h3 className="text-lg font-bold text-primary mb-4">
-              {editingEvent ? 'Chỉnh Sửa Sự Kiện' : 'Thêm Sự Kiện Mới'}
+            <h3 className="text-lg font-bold text-emerald-700 mb-4">
+              {editingEvent ? "Chỉnh Sửa Sự Kiện" : "Thêm Sự Kiện Mới"}
             </h3>
-            
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-neutral-700 mb-1">
@@ -249,9 +289,11 @@ export default function AdminEventsPage() {
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   required
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent"
                 />
               </div>
 
@@ -262,10 +304,12 @@ export default function AdminEventsPage() {
                 <input
                   type="text"
                   value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, date: e.target.value })
+                  }
                   placeholder="01-01"
                   required
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent"
                 />
               </div>
 
@@ -275,8 +319,10 @@ export default function AdminEventsPage() {
                 </label>
                 <select
                   value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  onChange={(e) =>
+                    setFormData({ ...formData, type: e.target.value as any })
+                  }
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent"
                 >
                   <option value="HOLIDAY">Ngày lễ</option>
                   <option value="HISTORY">Lịch sử</option>
@@ -290,9 +336,11 @@ export default function AdminEventsPage() {
                 </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   rows={3}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent"
                 />
               </div>
 
@@ -306,9 +354,9 @@ export default function AdminEventsPage() {
                 </button>
                 <button
                   type="submit"
-                  className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                  className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors"
                 >
-                  {editingEvent ? 'Cập nhật' : 'Thêm mới'}
+                  {editingEvent ? "Cập nhật" : "Thêm mới"}
                 </button>
               </div>
             </form>

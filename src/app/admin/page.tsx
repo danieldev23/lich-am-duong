@@ -38,7 +38,7 @@ export default function AdminPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <div className="min-h-screen bg-beige flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-neutral-600">Đang tải...</p>
@@ -52,7 +52,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-beige">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,7 +62,7 @@ export default function AdminPage() {
                 <i className="fas fa-cog text-white"></i>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-primary">Bảng Điều Khiển Admin</h1>
+                <h1 className="text-xl font-bold text-emerald-700">Bảng Điều Khiển Admin</h1>
                 <p className="text-sm text-neutral-600">Quản lý hệ thống lịch âm dương</p>
               </div>
             </div>
@@ -93,7 +93,7 @@ export default function AdminPage() {
               </div>
               <div className="ml-4">
                 <p className="text-sm text-neutral-600">Tổng sự kiện</p>
-                <p className="text-2xl font-bold text-primary">{stats.totalEvents}</p>
+                <p className="text-2xl font-bold text-emerald-700">{stats.totalEvents}</p>
               </div>
             </div>
           </div>
@@ -138,7 +138,7 @@ export default function AdminPage() {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-primary mb-4">
+            <h2 className="text-xl font-bold text-emerald-700 mb-4">
               <i className="fas fa-tasks mr-2"></i>
               Thao Tác Nhanh
             </h2>
@@ -185,7 +185,7 @@ export default function AdminPage() {
           </div>
 
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-primary mb-4">
+            <h2 className="text-xl font-bold text-emerald-700 mb-4">
               <i className="fas fa-chart-line mr-2"></i>
               Thống Kê Hệ Thống
             </h2>

@@ -12,9 +12,8 @@ const config: Config = {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
-        // ngaydep.com inspired colors
         primary: {
-          DEFAULT: '#2d7d46', // Green từ navbar ngaydep.com
+          DEFAULT: '#2d7d46', 
           light: '#3a9957',
           dark: '#236336',
           50: '#f0f9f4',

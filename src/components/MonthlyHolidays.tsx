@@ -157,7 +157,7 @@ export function MonthlyHolidays() {
               className={cn(
                 "px-3 py-1 rounded-lg text-sm font-medium transition-colors",
                 month === currentMonth
-                  ? "bg-emerald-600 text-white"
+                  ? "bg-primary text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               )}
             >

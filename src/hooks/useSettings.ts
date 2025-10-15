@@ -1,6 +1,5 @@
 "use client";
 
-import { prisma } from "@/lib/prisma";
 import { useState, useEffect } from "react";
 
 interface ISettingKeys {
@@ -74,14 +73,26 @@ export function useSettings() {
   };
 
   const updateSettings = async (
-    settings: Partial<ISetting[]>
+    items: Array<{ key: string; value: string; description?: string }>
   ): Promise<boolean> => {
-    const data = await prisma.siteSettings.updateMany({ data: settings });
-    console.log(`Updated from use settings: ${data}`);
-    return false;
+    try {
+      for (const item of items) {
+        await fetch("/api/admin/settings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(item),
+        });
+      }
+      await fetchSettings();
+      return true;
+    } catch (e) {
+      console.error("Failed to update settings", e);
+      return false;
+    }
   };
-  const isFeatureEnabled = (feature: keyof ISettingKeys) => {
-    return getSetting(feature) === "true";
+  const isFeatureEnabled = (feature: keyof ISettingKeys | string) => {
+    const value = settings[feature as string];
+    return value === "true" || value === "1";
   };
 
   return {

@@ -18,7 +18,7 @@ export interface IAffiliateBanner {
 }
 
 export function AffiliateBanner(affiliateProduct: IAffiliateBanner) {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const { getSetting } = useSettings();
   console.log(`Setting from Banner: ${getSetting("site_title")}`);
   if (!isVisible) return null;
