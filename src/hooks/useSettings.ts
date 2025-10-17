@@ -53,7 +53,6 @@ export function useSettings() {
       }
 
       const data: IData = await response.json();
-      console.log("Data from settings: ", JSON.stringify(data.data));
 
       if (data.success && data.data) {
         const settingsMap = data.data.reduce((acc, setting) => {

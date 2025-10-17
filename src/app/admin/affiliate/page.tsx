@@ -59,8 +59,6 @@ function AdminAffiliatePageComponent() {
   const handleSave = async () => {
     try {
       const dataToSave = { ...affiliateData, isVisible };
-      console.log("Saving affiliate data:", dataToSave);
-      console.log("Features:", dataToSave.features);
       
       const response = await fetch("/api/admin/affiliate", {
         method: "POST",
@@ -84,13 +82,10 @@ function AdminAffiliatePageComponent() {
 
   const addFeature = () => {
     if (newFeature.title.trim()) {
-      console.log("Adding feature:", newFeature);
-      console.log("Current features:", affiliateData.features);
       const updatedData = {
         ...affiliateData,
         features: [...(affiliateData.features || []), newFeature],
       };
-      console.log("Updated features:", updatedData.features);
       setAffiliateData(updatedData);
       setNewFeature({ title: "", description: "" });
     }
@@ -303,11 +298,7 @@ function AdminAffiliatePageComponent() {
                   />
                   <button
                     type="button"
-                    onClick={() => {
-                      console.log("Add feature button clicked!");
-                      console.log("New feature:", newFeature);
-                      addFeature();
-                    }}
+                    onClick={addFeature}
                     className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 cursor-pointer z-10 relative sm:w-auto w-full"
                     style={{ pointerEvents: 'auto' }}
                   >

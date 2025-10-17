@@ -77,13 +77,6 @@ export function UpcomingEvents({ onDateClick }: UpcomingEventsProps) {
   
   const allUpcomingEvents = getUpcomingEvents(60); // Tăng lên 60 ngày để có nhiều sự kiện hơn
   
-  // Debug log
-  console.log('All upcoming events:', allUpcomingEvents.map(e => ({ 
-    title: e.title || e.name, 
-    date: e.date.toDateString(),
-    daysFromNow: Math.ceil((e.date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-  })));
-  
   // Lọc bỏ sự kiện hôm nay khỏi danh sách upcoming
   const upcomingEvents = allUpcomingEvents.filter(event => {
     const eventDate = new Date(event.date);
