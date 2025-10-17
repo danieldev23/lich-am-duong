@@ -1,12 +1,11 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IAffiliateBanner } from "@/components/AffiliateBanner";
 
-function AdminAffiliatePageComponent() {
+export default function AdminAffiliatePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [affiliateData, setAffiliateData] = useState<IAffiliateBanner>({
@@ -25,8 +24,14 @@ function AdminAffiliatePageComponent() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     if (status === "loading") return;
 
     if (!session || (session.user as any)?.role !== "admin") {
@@ -35,7 +40,8 @@ function AdminAffiliatePageComponent() {
     }
 
     fetchAffiliateData();
-  }, [session, status, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, status, mounted]);
 
   const fetchAffiliateData = async () => {
     try {
@@ -98,7 +104,7 @@ function AdminAffiliatePageComponent() {
     });
   };
 
-  if (status === "loading" || isLoading) {
+  if (!mounted || status === "loading" || isLoading) {
     return (
       <div className="min-h-screen bg-beige flex items-center justify-center">
         <div className="text-center">
@@ -300,13 +306,11 @@ function AdminAffiliatePageComponent() {
                     type="button"
                     onClick={addFeature}
                     className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 cursor-pointer z-10 relative sm:w-auto w-full"
-                    style={{ pointerEvents: 'auto' }}
                   >
                     <i className="fas fa-plus mr-2 sm:mr-0"></i>
                     <span className="sm:hidden">Thêm tính năng</span>
                   </button>
                 </div>
-       
               </div>
             </div>
 
@@ -459,17 +463,3 @@ function AdminAffiliatePageComponent() {
     </div>
   );
 }
-
-const AdminAffiliatePage = dynamic(() => Promise.resolve(AdminAffiliatePageComponent), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen bg-beige flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-neutral-600">Đang tải...</p>
-      </div>
-    </div>
-  )
-});
-
-export default AdminAffiliatePage;
