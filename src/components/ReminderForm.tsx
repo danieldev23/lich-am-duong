@@ -98,7 +98,7 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
         setCaptchaToken(null);
         turnstileRef.current?.reset();
       }
-    } catch (error) {
+    } catch {
       setMessage({ type: 'error', text: 'Không thể kết nối đến server' });
       // Reset CAPTCHA on error
       setCaptchaToken(null);
@@ -298,7 +298,7 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
         </h4>
         <ul className="text-xs text-blue-700 space-y-1">
           <li>• Email nhắc nhở sẽ được gửi ngay lập tức</li>
-          <li>• Nếu chọn "Lặp lại hàng năm", bạn sẽ nhận nhắc nhở mỗi năm</li>
+          <li>• Nếu chọn &ldquo;Lặp lại hàng năm&rdquo;, bạn sẽ nhận nhắc nhở mỗi năm</li>
           <li>• Kiểm tra hộp thư spam nếu không nhận được email</li>
         </ul>
       </div>
