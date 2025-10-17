@@ -36,6 +36,7 @@ const EVENT_TYPE_COLORS = {
   culture: 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-200'
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const EVENT_TYPE_ICONS = {
   holiday: 'fas fa-star',
   history: 'fas fa-landmark',
@@ -90,6 +91,7 @@ export function UpcomingEvents({ onDateClick }: UpcomingEventsProps) {
     return eventDate.toDateString() !== todayDate.toDateString();
   }).slice(0, 8); // Giới hạn 8 sự kiện để không quá dài
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getDaysUntil = (date: Date) => {
     const today = new Date();
     const diffTime = date.getTime() - today.getTime();
@@ -100,6 +102,7 @@ export function UpcomingEvents({ onDateClick }: UpcomingEventsProps) {
     return `${diffDays} ngày nữa`;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getEventTypeLabel = (type: string) => {
     switch (type) {
       case 'holiday': return 'Ngày lễ';

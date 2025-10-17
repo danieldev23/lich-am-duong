@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { convertSolar2Lunar, getCanChi, getTietKhi, getTruc, getGioHoangDao, getCanChiYear } from '@/lib/lunar-calendar';
-import { EVENTS,  HOLIDAYS, QUOTES, getZodiacAnimal } from '@/lib/constants';
+import { HOLIDAYS, QUOTES, getZodiacAnimal } from '@/lib/constants';
 
 // Random quotes
 
