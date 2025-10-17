@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/hooks/useSettings';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 interface ReminderFormProps {
   onSuccess?: () => void;
 }
 
 export function ReminderForm({ onSuccess }: ReminderFormProps) {
-  const { isFeatureEnabled, isLoading: settingsLoading } = useSettings();
+  const { isFeatureEnabled, getSetting, isLoading: settingsLoading } = useSettings();
   const [formData, setFormData] = useState({
     email: '',
     title: '',
@@ -20,6 +21,8 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const turnstileRef = useRef<any>(null);
 
   // Kiểm tra nếu tính năng bị tắt
   if (settingsLoading) {
@@ -54,13 +57,24 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
     setIsSubmitting(true);
     setMessage(null);
 
+    // Check CAPTCHA if enabled
+    const isCaptchaEnabled = isFeatureEnabled('enable_captcha');
+    if (isCaptchaEnabled && !captchaToken) {
+      setMessage({ type: 'error', text: 'Vui lòng xác thực CAPTCHA' });
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await fetch('/api/reminders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          captchaToken: isCaptchaEnabled ? captchaToken : null,
+        }),
       });
 
       const data = await response.json();
@@ -75,12 +89,20 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
           reminderTime: '',
           isRecurring: false
         });
+        setCaptchaToken(null);
+        turnstileRef.current?.reset();
         onSuccess?.();
       } else {
         setMessage({ type: 'error', text: data.error || 'Có lỗi xảy ra' });
+        // Reset CAPTCHA on error
+        setCaptchaToken(null);
+        turnstileRef.current?.reset();
       }
     } catch (error) {
       setMessage({ type: 'error', text: 'Không thể kết nối đến server' });
+      // Reset CAPTCHA on error
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     } finally {
       setIsSubmitting(false);
     }
@@ -95,11 +117,8 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
+    <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-emerald-700 mb-2">
-          ➕ Tạo Nhắc Nhở Mới
-        </h2>
         <p className="text-gray-600">
           Tạo nhắc nhở và nhận thông báo qua email
         </p>
@@ -226,6 +245,23 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
             Lặp lại hàng năm
           </label>
         </div>
+
+        {/* CAPTCHA */}
+        {isFeatureEnabled('enable_captcha') && getSetting('turnstile_site_key') && (
+          <div className="flex justify-center">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={getSetting('turnstile_site_key')}
+              onSuccess={(token) => setCaptchaToken(token)}
+              onError={() => setCaptchaToken(null)}
+              onExpire={() => setCaptchaToken(null)}
+              options={{
+                theme: 'light',
+                size: 'normal',
+              }}
+            />
+          </div>
+        )}
 
         {/* Submit Button */}
         <div className="pt-4">

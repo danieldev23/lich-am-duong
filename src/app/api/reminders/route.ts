@@ -2,6 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createTransport, getMailerConfig } from "@/lib/mailer";
 
+// Verify Cloudflare Turnstile CAPTCHA
+async function verifyCaptcha(token: string, secretKey: string): Promise<boolean> {
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `secret=${secretKey}&response=${token}`,
+    });
+
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.error('CAPTCHA verification error:', error);
+    return false;
+  }
+}
+
 // Create a transporter from env; supports Gmail service or SMTP host
 async function senderFrom() {
   const cfg = await getMailerConfig();
@@ -18,6 +37,7 @@ export async function POST(request: NextRequest) {
       reminderDate,
       reminderTime,
       isRecurring,
+      captchaToken,
     } = body;
 
     // Validate input
@@ -26,6 +46,35 @@ export async function POST(request: NextRequest) {
         { error: "Email, tiêu đề và ngày nhắc nhở là bắt buộc" },
         { status: 400 }
       );
+    }
+
+    // Check if CAPTCHA is enabled and verify it
+    const captchaSettings = await prisma.siteSettings.findMany({
+      where: {
+        key: {
+          in: ['enable_captcha', 'turnstile_secret_key']
+        }
+      }
+    });
+
+    const enableCaptcha = captchaSettings.find(s => s.key === 'enable_captcha')?.value === 'true';
+    const secretKey = captchaSettings.find(s => s.key === 'turnstile_secret_key')?.value;
+
+    if (enableCaptcha && secretKey) {
+      if (!captchaToken) {
+        return NextResponse.json(
+          { error: "CAPTCHA verification is required" },
+          { status: 400 }
+        );
+      }
+
+      const isCaptchaValid = await verifyCaptcha(captchaToken, secretKey);
+      if (!isCaptchaValid) {
+        return NextResponse.json(
+          { error: "CAPTCHA verification failed. Please try again." },
+          { status: 400 }
+        );
+      }
     }
 
     // Build email content
@@ -119,6 +168,7 @@ export async function POST(request: NextRequest) {
         // isEmailSent will be true if transporter succeeded, but we treated failures as non-blocking
         isEmailSent: true,
         status: "PENDING",
+        isRecurring: isRecurring || false,
       },
     });
 
@@ -144,4 +194,98 @@ export async function GET() {
     take: 50,
   });
   return NextResponse.json({ reminders });
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const {
+      id,
+      email,
+      title,
+      description,
+      reminderDate,
+      reminderTime,
+      isRecurring,
+    } = body;
+
+    // Validate input
+    if (!id || !email || !title || !reminderDate) {
+      return NextResponse.json(
+        { error: "ID, email, tiêu đề và ngày nhắc nhở là bắt buộc" },
+        { status: 400 }
+      );
+    }
+
+    // Build date objects
+    const dateOnly = new Date(reminderDate);
+    dateOnly.setHours(0, 0, 0, 0);
+    let timeDate: Date | null = null;
+    if (reminderTime) {
+      const [hh, mm] = String(reminderTime)
+        .split(":")
+        .map((n: string) => parseInt(n, 10));
+      timeDate = new Date(dateOnly);
+      timeDate.setHours(hh || 0, mm || 0, 0, 0);
+    }
+
+    // Update reminder
+    const updated = await prisma.reminder.update({
+      where: { id },
+      data: {
+        title,
+        description: description || null,
+        date: dateOnly,
+        time: timeDate,
+        email,
+        isRecurring: isRecurring || false,
+        status: "PENDING", // Reset status when updated
+        isEmailSent: false, // Reset email sent status
+      },
+    });
+
+    return NextResponse.json(
+      {
+        message: "Nhắc nhở đã được cập nhật thành công!",
+        reminder: updated,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error updating reminder:", error);
+    return NextResponse.json(
+      { error: "Có lỗi xảy ra khi cập nhật nhắc nhở" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID nhắc nhở là bắt buộc" },
+        { status: 400 }
+      );
+    }
+
+    // Delete reminder
+    await prisma.reminder.delete({
+      where: { id },
+    });
+
+    return NextResponse.json(
+      { message: "Nhắc nhở đã được xóa thành công!" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting reminder:", error);
+    return NextResponse.json(
+      { error: "Có lỗi xảy ra khi xóa nhắc nhở" },
+      { status: 500 }
+    );
+  }
 }

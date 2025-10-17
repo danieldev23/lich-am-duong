@@ -25,6 +25,8 @@ export default function AdminRemindersPage() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [reminderToDelete, setReminderToDelete] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -75,6 +77,29 @@ export default function AdminRemindersPage() {
     } catch (error) {
       console.error("Error creating reminder:", error);
     }
+  };
+
+  const handleDelete = async () => {
+    if (!reminderToDelete) return;
+
+    try {
+      const response = await fetch(`/api/admin/reminders?id=${reminderToDelete}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        fetchReminders();
+        setShowDeleteModal(false);
+        setReminderToDelete(null);
+      }
+    } catch (error) {
+      console.error("Error deleting reminder:", error);
+    }
+  };
+
+  const confirmDelete = (reminderId: string) => {
+    setReminderToDelete(reminderId);
+    setShowDeleteModal(true);
   };
 
   const getStatusLabel = (status: string) => {
@@ -237,6 +262,9 @@ export default function AdminRemindersPage() {
                   <th className="text-left py-4 px-6 font-semibold text-neutral-700">
                     Mô tả
                   </th>
+                  <th className="text-left py-4 px-6 font-semibold text-neutral-700">
+                    Thao tác
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -264,6 +292,15 @@ export default function AdminRemindersPage() {
                     </td>
                     <td className="py-4 px-6 text-sm text-neutral-600 max-w-xs truncate">
                       {reminder.description || "-"}
+                    </td>
+                    <td className="py-4 px-6">
+                      <button
+                        onClick={() => confirmDelete(reminder.id)}
+                        className="text-red-600 hover:text-red-800 transition-colors p-2 rounded-lg hover:bg-red-50"
+                        title="Xóa nhắc nhở"
+                      >
+                        <i className="fas fa-trash text-sm"></i>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -364,6 +401,45 @@ export default function AdminRemindersPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                <i className="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+              </div>
+              <h3 className="text-lg font-bold text-red-600">
+                Xác nhận xóa
+              </h3>
+            </div>
+
+            <p className="text-neutral-600 mb-6">
+              Bạn có chắc chắn muốn xóa nhắc nhở này? Hành động này không thể hoàn tác.
+            </p>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setReminderToDelete(null);
+                }}
+                className="px-4 py-2 text-neutral-600 hover:text-neutral-800 transition-colors"
+              >
+                Hủy
+              </button>
+              <button
+                onClick={handleDelete}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Xóa
+              </button>
+            </div>
           </div>
         </div>
       )}

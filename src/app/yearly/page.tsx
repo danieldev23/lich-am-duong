@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { cn } from "@/lib/utils";
+import { EVENTS, HOLIDAYS, getZodiacAnimal } from "@/lib/constants";
 
 // Mock functions and constants (replace with actual imports)
 const convertSolar2Lunar = (day: number, month: number, year: number) => ({
@@ -12,79 +13,10 @@ const convertSolar2Lunar = (day: number, month: number, year: number) => ({
   year: year - 76,
 });
 
-const EVENTS = [
-  {
-    date: "1-1",
-    title: "Tết Dương Lịch",
-    desc: "Ngày đầu năm mới",
-    type: "holiday",
-  },
-  {
-    date: "2-14",
-    title: "Valentine",
-    desc: "Ngày lễ tình yêu",
-    type: "culture",
-  },
-  {
-    date: "3-8",
-    title: "Quốc tế Phụ nữ",
-    desc: "Ngày Quốc tế Phụ nữ",
-    type: "holiday",
-  },
-  {
-    date: "4-30",
-    title: "Ngày Giải phóng miền Nam",
-    desc: "Ngày thống nhất đất nước",
-    type: "history",
-  },
-  {
-    date: "5-1",
-    title: "Quốc tế Lao động",
-    desc: "Ngày Quốc tế Lao động",
-    type: "holiday",
-  },
-  {
-    date: "6-1",
-    title: "Quốc tế Thiếu nhi",
-    desc: "Ngày Quốc tế Thiếu nhi",
-    type: "culture",
-  },
-  {
-    date: "9-2",
-    title: "Quốc khánh",
-    desc: "Ngày Quốc khánh Việt Nam",
-    type: "holiday",
-  },
-  {
-    date: "10-20",
-    title: "Ngày Phụ nữ Việt Nam",
-    desc: "Ngày Phụ nữ Việt Nam",
-    type: "culture",
-  },
-  {
-    date: "11-20",
-    title: "Ngày Nhà giáo Việt Nam",
-    desc: "Ngày Nhà giáo Việt Nam",
-    type: "culture",
-  },
-  {
-    date: "12-25",
-    title: "Giáng sinh",
-    desc: "Lễ Giáng sinh",
-    type: "holiday",
-  },
-];
-
-const HOLIDAYS = [
-  { date: "1-1" },
-  { date: "4-30" },
-  { date: "5-1" },
-  { date: "9-2" },
-  { date: "12-25" },
-];
-
 const getDateString = (date: Date) => {
-  return `${date.getMonth() + 1}-${date.getDate()}`;
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  return `${month}-${day}`;
 };
 
 const isToday = (date: Date) => {
@@ -194,6 +126,8 @@ export default function YearlyPage() {
     setSelectedDate(date);
   };
 
+  const zodiacAnimal = getZodiacAnimal(selectedYear);
+
   const yearlyEvents = EVENTS.filter((event) => {
     const [month, day] = event.date.split("-").map(Number);
     const eventDate = new Date(selectedYear, month - 1, day);
@@ -234,7 +168,7 @@ export default function YearlyPage() {
               <i className="fas fa-calendar-alt text-3xl"></i>
             </div>
             <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              Lịch Năm {selectedYear}
+              Lịch Năm {selectedYear} - {zodiacAnimal.name}
             </h1>
             <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
               Tổng quan lịch cả năm với các sự kiện quan trọng, ngày lễ và thông
@@ -242,6 +176,10 @@ export default function YearlyPage() {
               {selectedYear}.
             </p>
             <div className="mt-8 flex justify-center space-x-4">
+              <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center">
+                <span className="text-2xl mr-2">{zodiacAnimal.emoji}</span>
+                <span className="text-sm font-medium">{zodiacAnimal.name}</span>
+              </div>
               <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
                 <span className="text-sm font-medium">
                   📅 {yearlyEvents.length} Sự kiện

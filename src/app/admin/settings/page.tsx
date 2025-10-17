@@ -3,13 +3,13 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSettings } from "@/hooks/useSettings";
 
 export default function AdminSettingsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { settings, isLoading, error, getSetting, refetch, updateSettings } =
-    useSettings();
+  const [settings, setSettings] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [showModal, setShowModal] = useState(false);
   const [editingKey, setEditingKey] = useState<string | null>(null);
@@ -19,12 +19,41 @@ export default function AdminSettingsPage() {
     description: "",
   });
 
+  const fetchSettings = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/admin/settings");
+      const data = await response.json();
+      
+      if (data.success && data.data) {
+        const settingsMap = data.data.reduce((acc: Record<string, string>, setting: any) => {
+          acc[setting.key] = setting.value;
+          return acc;
+        }, {});
+        setSettings(settingsMap);
+        setError(null);
+      } else {
+        setError("Failed to fetch settings");
+      }
+    } catch (err) {
+      setError("Network error");
+      console.error("Error fetching settings:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const refetch = () => {
+    fetchSettings();
+  };
+
   useEffect(() => {
     if (status === "loading") return;
     if (!session || (session.user as any)?.role !== "admin") {
       router.push("/admin/login");
       return;
     }
+    fetchSettings();
   }, [session, status, router]);
 
   const handleEdit = (key: string) => {
@@ -92,6 +121,21 @@ export default function AdminSettingsPage() {
       key: "max_reminders_per_user",
       value: "10",
       description: "Số lượng nhắc nhở tối đa mỗi người dùng",
+    },
+    {
+      key: "turnstile_site_key",
+      value: "",
+      description: "Cloudflare Turnstile Site Key (Public)",
+    },
+    {
+      key: "turnstile_secret_key",
+      value: "",
+      description: "Cloudflare Turnstile Secret Key (Private)",
+    },
+    {
+      key: "enable_captcha",
+      value: "true",
+      description: "Bật CAPTCHA cho form nhắc nhở",
     },
   ];
 
