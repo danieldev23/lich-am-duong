@@ -2,7 +2,6 @@
 
 import { Header } from "@/components/Header";
 import { getTetDate } from "@/lib/lunar-calendar";
-import { calculateDaysBetween } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 interface TimeLeft {
@@ -84,27 +83,27 @@ export default function CountdownPage() {
       <Header />
 
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-red-600 via-red-500 to-accent text-white py-16 overflow-hidden">
+      <div className="relative bg-gradient-to-br from-primary via-primary-light to-emerald-600 text-white py-16 overflow-hidden">
         {/* Background Pattern */}
         <div
-          className="absolute inset-0 opacity-15"
+          className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Cpath d='M40 40c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M40 40c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}
         />
 
-        {/* Floating Fireworks Elements */}
-        <div className="absolute top-10 left-10 w-16 h-16 bg-yellow-400/20 rounded-full animate-pulse"></div>
-        <div className="absolute top-20 right-20 w-12 h-12 bg-yellow-400/20 rounded-full animate-pulse delay-1000"></div>
-        <div className="absolute bottom-10 left-20 w-20 h-20 bg-yellow-400/20 rounded-full animate-pulse delay-2000"></div>
-        <div className="absolute bottom-20 right-10 w-14 h-14 bg-yellow-400/20 rounded-full animate-pulse delay-500"></div>
+        {/* Floating Gentle Elements */}
+        <div className="absolute top-10 left-10 w-16 h-16 bg-white/10 rounded-full animate-pulse"></div>
+        <div className="absolute top-20 right-20 w-12 h-12 bg-white/8 rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute bottom-10 left-20 w-20 h-20 bg-white/10 rounded-full animate-pulse delay-2000"></div>
+        <div className="absolute bottom-20 right-10 w-14 h-14 bg-white/8 rounded-full animate-pulse delay-500"></div>
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full mb-6 shadow-lg">
               <i className="fas fa-hourglass-half text-3xl"></i>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-xl font-bold mb-4 bg-gradient-to-r from-white to-yellow-200 bg-clip-text text-transparent">
               🎊 Đếm Ngược Tết {tetDate?.getFullYear()} 🎊
             </h1>
             <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto">
@@ -124,11 +123,11 @@ export default function CountdownPage() {
           {/* Features Overview */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             {/* Sum Hop */}
-            <div className="relative bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div className="relative bg-gradient-to-br from-rose-400 to-rose-500 text-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
               <div
-                className="absolute inset-0 opacity-20"
+                className="absolute inset-0 opacity-15"
                 style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm0 0c0 5.5 4.5 10 10 10s10-4.5 10-10-4.5-10-10-10-10 4.5-10 10z'/%3E%3C/g%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm0 0c0 5.5 4.5 10 10 10s10-4.5 10-10-4.5-10-10-10-10 4.5-10 10z'/%3E%3C/g%3E%3C/svg%3E")`,
                 }}
               />
               <div className="relative z-10">
@@ -141,11 +140,11 @@ export default function CountdownPage() {
             </div>
 
             {/* Li Xi */}
-            <div className="relative bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div className="relative bg-gradient-to-br from-amber-400 to-amber-500 text-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
               <div
-                className="absolute inset-0 opacity-20"
+                className="absolute inset-0 opacity-15"
                 style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Cpath d='M20 0l20 20-20 20L0 20z'/%3E%3C/g%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M20 0l20 20-20 20L0 20z'/%3E%3C/g%3E%3C/svg%3E")`,
                 }}
               />
               <div className="relative z-10">
@@ -158,11 +157,11 @@ export default function CountdownPage() {
             </div>
 
             {/* Banh Chung */}
-            <div className="relative bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div className="relative bg-gradient-to-br from-emerald-400 to-emerald-500 text-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
               <div
-                className="absolute inset-0 opacity-20"
+                className="absolute inset-0 opacity-15"
                 style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3Ccircle cx='3' cy='13' r='3'/%3E%3Ccircle cx='13' cy='3' r='3'/%3E%3C/g%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3Ccircle cx='3' cy='13' r='3'/%3E%3Ccircle cx='13' cy='3' r='3'/%3E%3C/g%3E%3C/svg%3E")`,
                 }}
               />
               <div className="relative z-10">
@@ -175,11 +174,11 @@ export default function CountdownPage() {
             </div>
 
             {/* Hoa Mai */}
-            <div className="relative bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <div className="relative bg-gradient-to-br from-violet-400 to-violet-500 text-white rounded-xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
               <div
-                className="absolute inset-0 opacity-20"
+                className="absolute inset-0 opacity-15"
                 style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z'/%3E%3C/g%3E%3C/svg%3E")`,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z'/%3E%3C/g%3E%3C/svg%3E")`,
                 }}
               />
               <div className="relative z-10">
@@ -215,11 +214,11 @@ export default function CountdownPage() {
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   {/* Days */}
-                  <div className="relative bg-gradient-to-br from-red-500 to-red-600 text-white rounded-xl p-6 shadow-lg overflow-hidden">
+                  <div className="relative bg-gradient-to-br from-slate-500 to-slate-600 text-white rounded-xl p-6 shadow-lg overflow-hidden">
                     <div
-                      className="absolute inset-0 opacity-20"
+                      className="absolute inset-0 opacity-15"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm0 0c0 5.5 4.5 10 10 10s10-4.5 10-10-4.5-10-10-10-10 4.5-10 10z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm0 0c0 5.5 4.5 10 10 10s10-4.5 10-10-4.5-10-10-10-10 4.5-10 10z'/%3E%3C/g%3E%3C/svg%3E")`,
                       }}
                     />
                     <div className="relative z-10">
@@ -231,11 +230,11 @@ export default function CountdownPage() {
                   </div>
 
                   {/* Hours */}
-                  <div className="relative bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-xl p-6 shadow-lg overflow-hidden">
+                  <div className="relative bg-gradient-to-br from-teal-500 to-teal-600 text-white rounded-xl p-6 shadow-lg overflow-hidden">
                     <div
-                      className="absolute inset-0 opacity-20"
+                      className="absolute inset-0 opacity-15"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Cpath d='M20 0l20 20-20 20L0 20z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M20 0l20 20-20 20L0 20z'/%3E%3C/g%3E%3C/svg%3E")`,
                       }}
                     />
                     <div className="relative z-10">
@@ -247,11 +246,11 @@ export default function CountdownPage() {
                   </div>
 
                   {/* Minutes */}
-                  <div className="relative bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-xl p-6 shadow-lg overflow-hidden">
+                  <div className="relative bg-gradient-to-br from-indigo-500 to-indigo-600 text-white rounded-xl p-6 shadow-lg overflow-hidden">
                     <div
-                      className="absolute inset-0 opacity-20"
+                      className="absolute inset-0 opacity-15"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3Ccircle cx='3' cy='13' r='3'/%3E%3Ccircle cx='13' cy='3' r='3'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3Ccircle cx='3' cy='13' r='3'/%3E%3Ccircle cx='13' cy='3' r='3'/%3E%3C/g%3E%3C/svg%3E")`,
                       }}
                     />
                     <div className="relative z-10">
@@ -263,11 +262,11 @@ export default function CountdownPage() {
                   </div>
 
                   {/* Seconds */}
-                  <div className="relative bg-gradient-to-br from-pink-500 to-pink-600 text-white rounded-xl p-6 shadow-lg overflow-hidden">
+                  <div className="relative bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-xl p-6 shadow-lg overflow-hidden">
                     <div
-                      className="absolute inset-0 opacity-20"
+                      className="absolute inset-0 opacity-15"
                       style={{
-                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z'/%3E%3C/g%3E%3C/svg%3E")`,
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20z'/%3E%3C/g%3E%3C/svg%3E")`,
                       }}
                     />
                     <div className="relative z-10">
