@@ -230,6 +230,17 @@ export function getCanChi(day: number, month: number, year: number): string {
   return can[canIndex] + ' ' + chi[chiIndex];
 }
 
+export function getCanChiYear(year: number): string {
+  const can = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'];
+  const chi = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+
+  // offset 1984 là năm Giáp Tý => canIndex = 0, chiIndex = 0
+  const canIndex = (year + 6) % 10; // hoặc (year - 4) % 10
+  const chiIndex = (year + 8) % 12; // hoặc (year - 4) % 12
+
+  return `${can[canIndex]} ${chi[chiIndex]}`;
+}
+
 export function getTietKhi(day: number, month: number, year: number): string {
   const tietKhi = [
     'Tiểu Hàn', 'Đại Hàn', 'Lập Xuân', 'Vũ Thủy', 'Kinh Trập', 'Xuân Phân',

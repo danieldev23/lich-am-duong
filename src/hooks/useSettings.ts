@@ -12,6 +12,13 @@ interface ISettingKeys {
   twitter_url: string;
   instagram_url: string;
   enable_affiliate: string;
+  turnstile_site_key: string;
+  turnstile_secret_key: string;
+  google_analytics_id: string;
+  enable_google_recaptcha_v3: string;
+  recaptcha_v3_site_key: string;
+  recaptcha_v3_secret_key: string;
+  enable_cron_jobs: string;
 }
 
 interface ISetting {

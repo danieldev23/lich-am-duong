@@ -4,10 +4,25 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useEvents } from '@/hooks/useEvents';
 
-const EVENT_TYPE_COLORS = {
-  holiday: 'bg-red-50 text-red-700 border-red-300',
-  history: 'bg-blue-50 text-blue-700 border-blue-300', 
-  culture: 'bg-purple-50 text-purple-700 border-purple-300'
+const EVENT_TYPE_STYLES = {
+  holiday: {
+    gradient: 'bg-gradient-to-br from-red-50 to-red-100',
+    text: 'text-red-700',
+    border: 'border-red-200',
+    pattern: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ef4444' fill-opacity='0.1'%3E%3Cpath d='M10 1l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4l2-4z'/%3E%3C/g%3E%3C/svg%3E")`,
+  },
+  history: {
+    gradient: 'bg-gradient-to-br from-blue-50 to-blue-100',
+    text: 'text-blue-700',
+    border: 'border-blue-200',
+    pattern: `url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233b82f6' fill-opacity='0.1'%3E%3Cpath d='M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z'/%3E%3Cpath d='M12 6v6l4 2-1 1.7-5-3V6h2z'/%3E%3C/g%3E%3C/svg%3E")`,
+  },
+  culture: {
+    gradient: 'bg-gradient-to-br from-purple-50 to-purple-100',
+    text: 'text-purple-700',
+    border: 'border-purple-200',
+    pattern: `url("data:image/svg+xml,%3Csvg width='22' height='22' viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%238b5cf6' fill-opacity='0.1'%3E%3Cpath d='M11 2c-5 0-9 4-9 9s4 9 9 9 9-4 9-9-4-9-9-9zm0 16c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7-3.1 7-7 7z'/%3E%3Ccircle cx='11' cy='11' r='3'/%3E%3C/g%3E%3C/svg%3E")`,
+  }
 };
 
 const EVENT_TYPE_ICONS = {
@@ -59,111 +74,151 @@ export function MonthlyHolidays() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-emerald-700">
-          📋 Ngày Lễ Trong {getMonthName(currentMonth)} {currentYear}
-        </h2>
-        
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={goToPreviousMonth}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700"
-          >
-            ←
-          </button>
-          
-          <div className="px-4 py-2 bg-emerald-50 rounded-lg border border-emerald-200">
-            <span className="text-emerald-700 font-medium">
-              {getMonthName(currentMonth)} {currentYear}
-            </span>
-          </div>
-          
-          <button
-            onClick={goToNextMonth}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700"
-          >
-            →
-          </button>
-        </div>
+    <div className="relative bg-white rounded-xl shadow-lg p-6 overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f59e0b' fill-opacity='0.1'%3E%3Cpath d='M25 5l5 10h10l-8 6 3 10-10-7-10 7 3-10-8-6h10l5-10z'/%3E%3C/g%3E%3C/svg%3E")`,
+          }}
+        />
       </div>
 
-      {/* Events List */}
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="animate-pulse">
-              <div className="h-32 bg-gray-200 rounded-lg"></div>
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-emerald-700 mb-4 sm:mb-0 flex items-center">
+            <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center mr-3">
+              <i className="fas fa-star text-emerald-600"></i>
             </div>
-          ))}
+            Sự Kiện Trong {getMonthName(currentMonth)} {currentYear}
+          </h2>
+          
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={goToPreviousMonth}
+              className="p-3 rounded-xl hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 transition-all duration-300 text-gray-700 hover:text-emerald-700 hover:shadow-md"
+            >
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            
+            <div className="px-4 py-2 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl border border-emerald-200 shadow-sm">
+              <span className="text-emerald-700 font-medium">
+                {getMonthName(currentMonth)} {currentYear}
+              </span>
+            </div>
+            
+            <button
+              onClick={goToNextMonth}
+              className="p-3 rounded-xl hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 transition-all duration-300 text-gray-700 hover:text-emerald-700 hover:shadow-md"
+            >
+              <i className="fas fa-chevron-right"></i>
+            </button>
+          </div>
         </div>
-      ) : monthlyEvents.length === 0 ? (
-        <div className="text-center py-12">
-          <i className="fas fa-calendar-times text-4xl text-neutral-300 mb-4"></i>
-          <p className="text-neutral-500">Không có ngày lễ nào trong tháng này</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {monthlyEvents.map((event, index) => (
-            <div key={index} className={cn(
-              "border-2 rounded-lg p-4 hover:shadow-md transition-all duration-300",
-              EVENT_TYPE_COLORS[event.type as keyof typeof EVENT_TYPE_COLORS] || 'bg-gray-100 text-gray-800 border-gray-200'
-            )}>
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-white bg-opacity-50 rounded-lg flex items-center justify-center mr-3">
-                    <i className={cn(
-                      EVENT_TYPE_ICONS[event.type as keyof typeof EVENT_TYPE_ICONS] || 'fas fa-calendar',
-                      "text-lg"
-                    )}></i>
+
+        {/* Events List */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="animate-pulse">
+                <div className="h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl"></div>
+              </div>
+            ))}
+          </div>
+        ) : monthlyEvents.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i className="fas fa-calendar-times text-2xl text-gray-400"></i>
+            </div>
+            <p className="text-gray-500 font-medium">Không có sự kiện nào trong tháng này</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {monthlyEvents.map((event, index) => {
+              const eventStyle = EVENT_TYPE_STYLES[event.type as keyof typeof EVENT_TYPE_STYLES] || {
+                gradient: 'bg-gradient-to-br from-gray-50 to-gray-100',
+                text: 'text-gray-700',
+                border: 'border-gray-200',
+                pattern: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236b7280' fill-opacity='0.1'%3E%3Ccircle cx='10' cy='10' r='3'/%3E%3C/g%3E%3C/svg%3E")`
+              };
+
+              return (
+                <div key={index} className={cn(
+                  "relative border-2 rounded-xl p-5 hover:shadow-lg transition-all duration-300 overflow-hidden group",
+                  eventStyle.gradient,
+                  eventStyle.border
+                )}>
+                  {/* Background Pattern */}
+                  <div className="absolute inset-0 opacity-30">
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backgroundImage: eventStyle.pattern,
+                      }}
+                    />
                   </div>
-                  <div>
-                    <div className="text-2xl font-bold">
-                      {event.date.getDate()}
+
+                  <div className="relative z-10">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 bg-white/80 backdrop-blur-sm rounded-xl flex items-center justify-center mr-3 shadow-sm">
+                          <i className={cn(
+                            EVENT_TYPE_ICONS[event.type as keyof typeof EVENT_TYPE_ICONS] || 'fas fa-calendar',
+                            "text-xl",
+                            eventStyle.text
+                          )}></i>
+                        </div>
+                        <div>
+                          <div className={cn("text-2xl font-bold", eventStyle.text)}>
+                            {event.date.getDate()}
+                          </div>
+                          <div className={cn("text-xs opacity-75", eventStyle.text)}>
+                            {getMonthName(currentMonth)}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <span className="text-xs font-medium px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full shadow-sm">
+                        {getEventTypeLabel(event.type)}
+                      </span>
                     </div>
-                    <div className="text-xs opacity-75">
-                      {getMonthName(currentMonth)}
-                    </div>
+                    
+                    <h3 className={cn("font-bold text-lg mb-3 leading-tight group-hover:text-primary transition-colors", eventStyle.text)}>
+                      {event.title}
+                    </h3>
+                    
+                    {(event.description || event.desc) && (
+                      <p className={cn("text-sm opacity-90 leading-relaxed", eventStyle.text)}>
+                        {event.description || event.desc}
+                      </p>
+                    )}
                   </div>
                 </div>
-                
-                <span className="text-xs font-medium px-2 py-1 bg-white bg-opacity-50 rounded-full">
-                  {getEventTypeLabel(event.type)}
-                </span>
-              </div>
-              
-              <h3 className="font-semibold text-lg mb-2 leading-tight">
-                {event.title}
-              </h3>
-              
-              {(event.description || event.desc) && (
-                <p className="text-sm opacity-90 leading-relaxed">
-                  {event.description || event.desc}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+              );
+            })}
+          </div>
+        )}
 
-      {/* Quick Navigation */}
-      <div className="mt-6 pt-6 border-t border-gray-200">
-        <div className="flex flex-wrap gap-2 justify-center">
-          {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-            <button
-              key={month}
-              onClick={() => setCurrentMonth(month)}
-              className={cn(
-                "px-3 py-1 rounded-lg text-sm font-medium transition-colors",
-                month === currentMonth
-                  ? "bg-primary text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              )}
-            >
-              T{month}
-            </button>
-          ))}
+        {/* Quick Navigation */}
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+              <button
+                key={month}
+                onClick={() => setCurrentMonth(month)}
+                className={cn(
+                  "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
+                  month === currentMonth
+                    ? "bg-gradient-to-r from-primary to-primary-light text-white shadow-lg"
+                    : "bg-gradient-to-r from-gray-100 to-gray-200 text-gray-600 hover:from-emerald-50 hover:to-emerald-100 hover:text-emerald-700 hover:shadow-md"
+                )}
+              >
+                T{month}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

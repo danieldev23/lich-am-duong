@@ -181,6 +181,19 @@ export default function AdminPage() {
                   </div>
                 </div>
               </button>
+              
+              <button 
+                onClick={() => router.push('/admin/affiliate')}
+                className="w-full text-left p-3 rounded-lg hover:bg-neutral-50 transition-colors border border-neutral-200"
+              >
+                <div className="flex items-center">
+                  <i className="fas fa-shopping-cart text-orange-500 mr-3"></i>
+                  <div>
+                    <p className="font-medium">Quản lý Affiliate Banner</p>
+                    <p className="text-sm text-neutral-600">Cấu hình banner quảng cáo sản phẩm</p>
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
 

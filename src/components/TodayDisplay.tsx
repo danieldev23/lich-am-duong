@@ -2,22 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { convertSolar2Lunar, getCanChi, getTietKhi, getTruc, getGioHoangDao } from '@/lib/lunar-calendar';
-import { EVENTS, HOLIDAYS } from '@/lib/constants';
+import { convertSolar2Lunar, getCanChi, getTietKhi, getTruc, getGioHoangDao, getCanChiYear } from '@/lib/lunar-calendar';
+import { EVENTS,  HOLIDAYS, QUOTES, getZodiacAnimal } from '@/lib/constants';
 
 // Random quotes
-const QUOTES = [
-  { text: "Làm việc khó mộng để thành, việc dễ thành lòng thường kiêu ngạo", author: "Khổng Tử" },
-  { text: "Học mà không nghĩ thì mông lung, nghĩ mà không học thì nguy hiểm", author: "Khổng Tử" },
-  { text: "Có chí thì nên, không gì là khó", author: "Tục ngữ Việt Nam" },
-  { text: "Trăm hay không bằng tay quen", author: "Tục ngữ Việt Nam" },
-  { text: "Học thầy không tày học bạn", author: "Tục ngữ Việt Nam" },
-  { text: "Công cha như núi Thái Sơn, Nghĩa mẹ như nước trong nguồn chảy ra", author: "Ca dao Việt Nam" },
-  { text: "Cái khó ló cái khôn", author: "Tục ngữ Việt Nam" },
-  { text: "Ăn quả nhớ kẻ trồng cây", author: "Tục ngữ Việt Nam" },
-  { text: "Một cây làm chẳng nên non, Ba cây chụm lại nên hòn núi cao", author: "Ca dao Việt Nam" },
-  { text: "Việc gì khó, đã có trời xanh", author: "Tục ngữ Việt Nam" },
-];
+
 
 const backgroundImages = [
   // Spring
@@ -46,7 +35,11 @@ const backgroundImages = [
 ];
 
 
-export function TodayDisplay() {
+interface TodayDisplayProps {
+  selectedDate?: Date | null;
+}
+
+export function TodayDisplay({ selectedDate: externalSelectedDate }: TodayDisplayProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [mounted, setMounted] = useState(false);
   const [quote, setQuote] = useState(QUOTES[0]);
@@ -61,6 +54,16 @@ export function TodayDisplay() {
     setMounted(true);
     randomizeQuote();
   }, []);
+
+  // Cập nhật selectedDate khi có external date
+  useEffect(() => {
+    if (externalSelectedDate) {
+      setSelectedDate(externalSelectedDate);
+      setPickerDay(externalSelectedDate.getDate());
+      setPickerMonth(externalSelectedDate.getMonth() + 1);
+      setPickerYear(externalSelectedDate.getFullYear());
+    }
+  }, [externalSelectedDate]);
 
   // Random lại quote khi selectedDate thay đổi
   useEffect(() => {
@@ -131,9 +134,11 @@ export function TodayDisplay() {
 
   const lunar = convertSolar2Lunar(day, month, year);
   const canChi = getCanChi(day, month, year);
+  const canChiYear = getCanChiYear(year);
   const tietKhi = getTietKhi(day, month, year);
   const truc = getTruc(day, month, year);
   const { hoangDao, hacDao } = getGioHoangDao(day, month, year);
+  const zodiacAnimal = getZodiacAnimal(year);
 
   const getDayName = (dayIndex: number) => {
     const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
@@ -302,7 +307,7 @@ export function TodayDisplay() {
                   <div className="text-xs text-gray-600 mt-2">Tháng</div>
                   <div className="font-semibold text-gray-700">Ất Dậu</div>
                   <div className="text-xs text-gray-600 mt-2">Năm</div>
-                  <div className="font-semibold text-gray-700">Ất Tỵ</div>
+                  <div className="font-semibold text-gray-700">{canChiYear}</div>
                 </div>
 
                 {/* Cột giữa - Ngày âm lớn */}
@@ -313,8 +318,8 @@ export function TodayDisplay() {
                   <div className="text-6xl font-bold text-primary my-2">
                     {lunar.day}
                   </div>
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-full text-white text-2xl">
-                    🐍
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-full text-white text-2xl" title={zodiacAnimal.name}>
+                    {zodiacAnimal.emoji}
                   </div>
                 </div>
 
@@ -375,7 +380,7 @@ export function TodayDisplay() {
           {/* View detail link */}
           <div className="text-center mt-4">
             <Link 
-              href="/calendar"
+              href="/converter"
               className="text-primary hover:text-primary-dark text-sm font-medium hover:underline bg-white/80 px-4 py-2 rounded inline-block"
             >
               Chuyển lịch âm dương tại đây →

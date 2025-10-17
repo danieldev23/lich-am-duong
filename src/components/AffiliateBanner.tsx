@@ -1,11 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSettings } from "@/hooks/useSettings";
+
 interface IFuture {
   title: string;
   description: string;
 }
+
 export interface IAffiliateBanner {
   provider: string;
   hotTitle: string;
@@ -15,17 +17,36 @@ export interface IAffiliateBanner {
   oldPrice: number;
   features: IFuture[];
   linkToBuy: string;
+  isVisible?: boolean;
 }
 
-export function AffiliateBanner(affiliateProduct: IAffiliateBanner) {
+export function AffiliateBanner() {
+  const [affiliateData, setAffiliateData] = useState<IAffiliateBanner | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const { getSetting } = useSettings();
-  console.log(`Setting from Banner: ${getSetting("site_title")}`);
-  if (!isVisible) return null;
+
+  useEffect(() => {
+    fetchAffiliateData();
+  }, []);
+
+  const fetchAffiliateData = async () => {
+    try {
+      const response = await fetch("/api/admin/affiliate");
+      const data = await response.json();
+      if (data.success && data.data) {
+        setAffiliateData(data.data);
+        setIsVisible(data.data.isVisible || false);
+      }
+    } catch (error) {
+      console.error("Error fetching affiliate data:", error);
+    }
+  };
+
+  if (!isVisible || !affiliateData || !affiliateData.productTitle) return null;
 
   const redirectToBuyLink = () => {
     setIsVisible(false);
-    window.open(affiliateProduct.linkToBuy, "_blank");
+    window.open(affiliateData.linkToBuy, "_blank");
   };
 
   return (
@@ -54,12 +75,12 @@ export function AffiliateBanner(affiliateProduct: IAffiliateBanner) {
         <div className="bg-white bg-opacity-95 px-4 py-3 text-center border-b-4 border-orange-600">
           <div className="flex items-center justify-center gap-2 mb-1">
             <span className="text-orange-600 font-black text-xl">
-              {affiliateProduct.provider}
+              {affiliateData.provider}
             </span>
           </div>
           <div className="inline-block px-4 py-1 bg-red-500 rounded-md">
             <span className="text-white font-bold text-sm">
-              🔥 {affiliateProduct.hotTitle}
+              🔥 {affiliateData.hotTitle}
             </span>
           </div>
         </div>
@@ -69,8 +90,8 @@ export function AffiliateBanner(affiliateProduct: IAffiliateBanner) {
           <div className="flex gap-3 mb-4">
             <div className="flex-shrink-0 w-28 h-28 bg-white rounded-lg border-2 border-orange-200 overflow-hidden">
               <img
-                src={affiliateProduct.productImg}
-                alt={affiliateProduct.productTitle}
+                src={affiliateData.productImg}
+                alt={affiliateData.productTitle}
                 width={112}
                 height={112}
                 className="w-full h-full object-cover"
@@ -79,25 +100,25 @@ export function AffiliateBanner(affiliateProduct: IAffiliateBanner) {
             </div>
             <div className="flex-1">
               <h3 className="text-sm font-semibold text-gray-800 mb-2 line-clamp-3">
-                {affiliateProduct.productTitle}
+                {affiliateData.productTitle}
               </h3>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-orange-600 font-bold text-lg">
-                  {affiliateProduct.price} vnđ
+                  {affiliateData.price.toLocaleString()} vnđ
                 </span>
                 <span className="text-gray-400 text-sm line-through">
-                  {affiliateProduct.oldPrice} vnđ
+                  {affiliateData.oldPrice.toLocaleString()} vnđ
                 </span>
               </div>
               <div className="inline-block px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
-                -50%
+                -{Math.round(((affiliateData.oldPrice - affiliateData.price) / affiliateData.oldPrice) * 100)}%
               </div>
             </div>
           </div>
 
           {/* Features */}
           <div className="space-y-2 mb-4 bg-orange-50 p-3 rounded-lg">
-            {affiliateProduct.features.map((f, idx) => (
+            {affiliateData.features.map((f, idx) => (
               <div key={idx} className="flex items-center gap-2 text-sm">
                 <span className="text-orange-600">⚡</span>
                 <span className="text-gray-700">

@@ -63,7 +63,7 @@ export function useEvents() {
         
         return { ...item, date: eventDate };
       })
-      .filter(item => item.date <= futureDate);
+      .filter(item => item.date <= futureDate && item.date >= today);
     
     // Loại bỏ duplicate dựa trên title + date
     const uniqueMap = new Map();
@@ -97,18 +97,41 @@ export function useEvents() {
       }
     });
     
-    // Events
+    // Events (chỉ từ API, không từ EVENTS constants để tránh duplicate)
     events.forEach(event => {
-      const [eventMonth, day] = event.date.split('-').map(Number);
-      if (eventMonth === month) {
-        monthEvents.push({
-          ...event,
-          date: new Date(targetYear, month - 1, day)
-        });
+      // Kiểm tra xem event này có phải từ EVENTS constants không
+      const isFromConstants = EVENTS.some(constEvent => 
+        constEvent.date === event.date && constEvent.title === event.title
+      );
+      
+      // Chỉ thêm nếu không phải từ constants hoặc không trùng với holidays
+      if (!isFromConstants) {
+        const [eventMonth, day] = event.date.split('-').map(Number);
+        if (eventMonth === month) {
+          const isDuplicate = monthEvents.some(existing => 
+            existing.title === event.title && 
+            existing.date.getDate() === day
+          );
+          
+          if (!isDuplicate) {
+            monthEvents.push({
+              ...event,
+              date: new Date(targetYear, month - 1, day)
+            });
+          }
+        }
       }
     });
     
-    return monthEvents.sort((a, b) => a.date.getTime() - b.date.getTime());
+    // Loại bỏ duplicate cuối cùng dựa trên title + date
+    const uniqueEvents = monthEvents.filter((event, index, self) => 
+      index === self.findIndex(e => 
+        e.title === event.title && 
+        e.date.getTime() === event.date.getTime()
+      )
+    );
+    
+    return uniqueEvents.sort((a, b) => a.date.getTime() - b.date.getTime());
   };
 
   return {
