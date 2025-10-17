@@ -24,8 +24,14 @@ export default function AdminAffiliatePage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     if (status === "loading") return;
 
     if (!session || (session.user as any)?.role !== "admin") {
@@ -34,7 +40,8 @@ export default function AdminAffiliatePage() {
     }
 
     fetchAffiliateData();
-  }, [session, status, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session, status, mounted]);
 
   const fetchAffiliateData = async () => {
     try {
@@ -58,8 +65,6 @@ export default function AdminAffiliatePage() {
   const handleSave = async () => {
     try {
       const dataToSave = { ...affiliateData, isVisible };
-      console.log("Saving affiliate data:", dataToSave);
-      console.log("Features:", dataToSave.features);
       
       const response = await fetch("/api/admin/affiliate", {
         method: "POST",
@@ -83,13 +88,10 @@ export default function AdminAffiliatePage() {
 
   const addFeature = () => {
     if (newFeature.title.trim()) {
-      console.log("Adding feature:", newFeature);
-      console.log("Current features:", affiliateData.features);
       const updatedData = {
         ...affiliateData,
         features: [...(affiliateData.features || []), newFeature],
       };
-      console.log("Updated features:", updatedData.features);
       setAffiliateData(updatedData);
       setNewFeature({ title: "", description: "" });
     }
@@ -102,7 +104,7 @@ export default function AdminAffiliatePage() {
     });
   };
 
-  if (status === "loading" || isLoading) {
+  if (!mounted || status === "loading" || isLoading) {
     return (
       <div className="min-h-screen bg-beige flex items-center justify-center">
         <div className="text-center">
@@ -302,19 +304,13 @@ export default function AdminAffiliatePage() {
                   />
                   <button
                     type="button"
-                    onClick={() => {
-                      console.log("Add feature button clicked!");
-                      console.log("New feature:", newFeature);
-                      addFeature();
-                    }}
+                    onClick={addFeature}
                     className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 cursor-pointer z-10 relative sm:w-auto w-full"
-                    style={{ pointerEvents: 'auto' }}
                   >
                     <i className="fas fa-plus mr-2 sm:mr-0"></i>
                     <span className="sm:hidden">Thêm tính năng</span>
                   </button>
                 </div>
-       
               </div>
             </div>
 

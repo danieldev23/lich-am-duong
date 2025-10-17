@@ -36,6 +36,7 @@ const EVENT_TYPE_COLORS = {
   culture: 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-emerald-200'
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const EVENT_TYPE_ICONS = {
   holiday: 'fas fa-star',
   history: 'fas fa-landmark',
@@ -76,13 +77,6 @@ export function UpcomingEvents({ onDateClick }: UpcomingEventsProps) {
   
   const allUpcomingEvents = getUpcomingEvents(60); // Tăng lên 60 ngày để có nhiều sự kiện hơn
   
-  // Debug log
-  console.log('All upcoming events:', allUpcomingEvents.map(e => ({ 
-    title: e.title || e.name, 
-    date: e.date.toDateString(),
-    daysFromNow: Math.ceil((e.date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
-  })));
-  
   // Lọc bỏ sự kiện hôm nay khỏi danh sách upcoming
   const upcomingEvents = allUpcomingEvents.filter(event => {
     const eventDate = new Date(event.date);
@@ -90,6 +84,7 @@ export function UpcomingEvents({ onDateClick }: UpcomingEventsProps) {
     return eventDate.toDateString() !== todayDate.toDateString();
   }).slice(0, 8); // Giới hạn 8 sự kiện để không quá dài
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getDaysUntil = (date: Date) => {
     const today = new Date();
     const diffTime = date.getTime() - today.getTime();
@@ -100,6 +95,7 @@ export function UpcomingEvents({ onDateClick }: UpcomingEventsProps) {
     return `${diffDays} ngày nữa`;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getEventTypeLabel = (type: string) => {
     switch (type) {
       case 'holiday': return 'Ngày lễ';

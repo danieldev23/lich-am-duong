@@ -66,7 +66,7 @@ export function TodayHero() {
               {getDayName(dayOfWeek).toUpperCase()}
             </div>
             <div className="text-white opacity-80">
-              "{quote.text}"
+              &ldquo;{quote.text}&rdquo;
               <div className="text-sm mt-1">- {quote.author} -</div>
             </div>
           </div>

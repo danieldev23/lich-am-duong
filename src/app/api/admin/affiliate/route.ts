@@ -19,7 +19,6 @@ export async function GET() {
 
     if (affiliateData) {
       const parsedData = JSON.parse(affiliateData.value);
-      console.log("Retrieved affiliate data:", JSON.stringify(parsedData, null, 2));
       return NextResponse.json({
         success: true,
         data: parsedData,
@@ -61,7 +60,6 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    console.log("Received affiliate data:", JSON.stringify(body, null, 2));
     
     // Validate required fields
     if (!body.provider || !body.productTitle) {
