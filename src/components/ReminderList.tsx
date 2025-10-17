@@ -83,7 +83,7 @@ export function ReminderList() {
         const data = await response.json();
         alert(data.error || 'Có lỗi xảy ra khi xóa nhắc nhở');
       }
-    } catch (error) {
+    } catch {
       alert('Không thể kết nối đến server');
     } finally {
       setIsDeleting(null);
@@ -120,7 +120,7 @@ export function ReminderList() {
         const data = await response.json();
         alert(data.error || 'Có lỗi xảy ra khi cập nhật nhắc nhở');
       }
-    } catch (error) {
+    } catch {
       alert('Không thể kết nối đến server');
     }
   };

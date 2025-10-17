@@ -70,7 +70,7 @@ export function TodayDisplay({ selectedDate: externalSelectedDate }: TodayDispla
     if (mounted) {
       randomizeQuote();
     }
-  }, [selectedDate]);
+  }, [selectedDate, mounted]);
 
   const randomizeQuote = () => {
     setQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
@@ -152,7 +152,6 @@ export function TodayDisplay({ selectedDate: externalSelectedDate }: TodayDispla
   };
 
   const dateStr = getDateString(selectedDate);
-  const todayEvents = EVENTS.filter(event => event.date === dateStr);
   const todayHolidays = HOLIDAYS.filter(h => h.date === dateStr);
 
   const daysInPickerMonth = getDaysInMonth(pickerMonth, pickerYear);
@@ -373,7 +372,7 @@ export function TodayDisplay({ selectedDate: externalSelectedDate }: TodayDispla
 
           {/* Quote */}
           <div className="bg-white/80 rounded-lg p-4 border border-gray-200 text-center">
-            <p className="text-sm italic text-gray-600 mb-1">"{quote.text}"</p>
+            <p className="text-sm italic text-gray-600 mb-1">&ldquo;{quote.text}&rdquo;</p>
             <p className="text-xs text-gray-500">- {quote.author} -</p>
           </div>
 
@@ -393,6 +392,7 @@ export function TodayDisplay({ selectedDate: externalSelectedDate }: TodayDispla
 }
 
 // Helper function
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTrucDescription(truc: string): string {
   const descriptions: Record<string, string> = {
     'Kiến': 'Tốt cho xây dựng, khởi công',

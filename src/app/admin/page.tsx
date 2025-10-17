@@ -1,11 +1,12 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { EVENTS, HOLIDAYS } from '@/lib/constants';
 
-export default function AdminPage() {
+function AdminPageComponent() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [stats, setStats] = useState({
@@ -282,3 +283,17 @@ export default function AdminPage() {
     </div>
   );
 }
+
+const AdminPage = dynamic(() => Promise.resolve(AdminPageComponent), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen bg-beige flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-neutral-600">Đang tải...</p>
+      </div>
+    </div>
+  )
+});
+
+export default AdminPage;
