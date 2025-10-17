@@ -120,15 +120,53 @@ export default function ConverterPage() {
     <div className="min-h-screen bg-beige">
       <Header />
 
-      <main className="w-full">
-        <div className="container mx-auto px-4 py-6 max-w-4xl">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-primary mb-2">
-              Chuyển Đổi Lịch
-            </h1>
-            <p className="text-neutral-600">
-              Chuyển đổi giữa dương lịch và âm lịch một cách chính xác
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-accent to-accent-light text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+              <i className="fas fa-exchange-alt text-2xl"></i>
+            </div>
+            <h1 className="text-4xl font-bold mb-3">Chuyển Đổi Lịch</h1>
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+              Chuyển đổi giữa dương lịch và âm lịch một cách chính xác, nhanh
+              chóng và tiện lợi
             </p>
+          </div>
+        </div>
+      </div>
+
+      <main className="w-full">
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          {/* Features Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-4 text-center shadow-lg">
+              <i className="fas fa-sun text-2xl mb-2"></i>
+              <h3 className="font-semibold">Dương → Âm</h3>
+              <p className="text-xs opacity-90">
+                Chuyển dương lịch sang âm lịch
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl p-4 text-center shadow-lg">
+              <i className="fas fa-moon text-2xl mb-2"></i>
+              <h3 className="font-semibold">Âm → Dương</h3>
+              <p className="text-xs opacity-90">
+                Chuyển âm lịch sang dương lịch
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-4 text-center shadow-lg">
+              <i className="fas fa-yin-yang text-2xl mb-2"></i>
+              <h3 className="font-semibold">Can Chi</h3>
+              <p className="text-xs opacity-90">Hiển thị can chi của ngày</p>
+            </div>
+
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl p-4 text-center shadow-lg">
+              <i className="fas fa-calendar-check text-2xl mb-2"></i>
+              <h3 className="font-semibold">Chính Xác</h3>
+              <p className="text-xs opacity-90">Kết quả chính xác 100%</p>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -202,8 +240,7 @@ export default function ConverterPage() {
 
                 <button
                   onClick={handleSolarToLunar}
-                  className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors font-medium"
-                >
+                  className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary-dark transition-colors font-medium">
                   <i className="fas fa-exchange-alt mr-2"></i>
                   Chuyển đổi
                 </button>
@@ -328,16 +365,14 @@ export default function ConverterPage() {
                   />
                   <label
                     htmlFor="isLeapMonth"
-                    className="text-sm text-neutral-700"
-                  >
+                    className="text-sm text-neutral-700">
                     Tháng nhuận
                   </label>
                 </div>
 
                 <button
                   onClick={handleLunarToSolar}
-                  className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent-dark transition-colors font-medium"
-                >
+                  className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent-dark transition-colors font-medium">
                   <i className="fas fa-exchange-alt mr-2"></i>
                   Chuyển đổi
                 </button>
