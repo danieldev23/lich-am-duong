@@ -1,11 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IAffiliateBanner } from "@/components/AffiliateBanner";
 
-export default function AdminAffiliatePage() {
+function AdminAffiliatePageComponent() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [affiliateData, setAffiliateData] = useState<IAffiliateBanner>({
@@ -467,3 +468,17 @@ export default function AdminAffiliatePage() {
     </div>
   );
 }
+
+const AdminAffiliatePage = dynamic(() => Promise.resolve(AdminAffiliatePageComponent), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen bg-beige flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-neutral-600">Đang tải...</p>
+      </div>
+    </div>
+  )
+});
+
+export default AdminAffiliatePage;
