@@ -118,6 +118,7 @@ function AdminSettingsPageComponent() {
     { key: "email_host", value: "", description: "SMTP host" },
     { key: "email_port", value: "587", description: "SMTP port" },
     { key: "email_secure", value: "false", description: "SMTP secure" },
+  
     {
       key: "max_reminders_per_user",
       value: "10",
@@ -125,12 +126,12 @@ function AdminSettingsPageComponent() {
     },
     {
       key: "turnstile_site_key",
-      value: "",
+      value: "test",
       description: "Cloudflare Turnstile Site Key (Public)",
     },
     {
       key: "turnstile_secret_key",
-      value: "",
+      value: "test",
       description: "Cloudflare Turnstile Secret Key (Private)",
     },
     {
