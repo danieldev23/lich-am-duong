@@ -9,20 +9,31 @@ async function senderFrom() {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log(`[${new Date().toISOString()}] Starting reminder sending process...`);
+    
     // Get current date and time
     const now = new Date();
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    // Find reminders that should be sent today
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    console.log(`Current time: ${now.toISOString()}`);
+    console.log(`Today (start): ${today.toISOString()}`);
+    console.log(`Tomorrow (end): ${tomorrow.toISOString()}`);
+    
+    // Find reminders that should be sent (today or overdue)
     const remindersToSend = await prisma.reminder.findMany({
       where: {
         date: {
-          lte: today
+          lt: tomorrow // Less than tomorrow (includes today and past dates)
         },
         status: "PENDING"
       }
     });
+
+    console.log(`Found ${remindersToSend.length} pending reminders to check`);
 
     let sentCount = 0;
     let errorCount = 0;
@@ -30,22 +41,46 @@ export async function POST(request: NextRequest) {
 
     for (const reminder of remindersToSend) {
       try {
-        // Check if it's time to send this reminder
         const reminderDate = new Date(reminder.date);
-        const shouldSend = reminderDate <= today;
+        reminderDate.setHours(0, 0, 0, 0);
         
-        // If reminder has a specific time, check if it's time
-        if (reminder.time) {
-          const reminderTime = new Date(reminder.time);
-          const currentHour = now.getHours();
-          const currentMinute = now.getMinutes();
-          const reminderHour = reminderTime.getHours();
-          const reminderMinute = reminderTime.getMinutes();
-          
-          // Only send if current time is at or after reminder time
-          if (currentHour < reminderHour || (currentHour === reminderHour && currentMinute < reminderMinute)) {
-            continue;
+        console.log(`Checking reminder ${reminder.id}: ${reminder.title}`);
+        console.log(`  - Reminder date: ${reminderDate.toISOString()}`);
+        console.log(`  - Has time: ${!!reminder.time}`);
+        
+        let shouldSend = false;
+        
+        // If reminder date is today or in the past
+        if (reminderDate <= today) {
+          if (reminder.time) {
+            // Has specific time - check if it's time to send
+            const reminderTime = new Date(reminder.time);
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const reminderHour = reminderTime.getHours();
+            const reminderMinute = reminderTime.getMinutes();
+            
+            const currentTotalMinutes = currentHour * 60 + currentMinute;
+            const reminderTotalMinutes = reminderHour * 60 + reminderMinute;
+            
+            console.log(`  - Current time: ${currentHour}:${currentMinute} (${currentTotalMinutes} mins)`);
+            console.log(`  - Reminder time: ${reminderHour}:${reminderMinute} (${reminderTotalMinutes} mins)`);
+            
+            // Send if current time is at or after reminder time
+            // Or if the reminder is from a past date (overdue)
+            if (reminderDate < today || currentTotalMinutes >= reminderTotalMinutes) {
+              shouldSend = true;
+              console.log(`  - Should send: YES (time condition met)`);
+            } else {
+              console.log(`  - Should send: NO (too early, need to wait ${reminderTotalMinutes - currentTotalMinutes} minutes)`);
+            }
+          } else {
+            // No specific time - send anytime on the reminder date or if overdue
+            shouldSend = true;
+            console.log(`  - Should send: YES (no specific time)`);
           }
+        } else {
+          console.log(`  - Should send: NO (future date)`);
         }
 
         if (shouldSend) {
@@ -105,9 +140,13 @@ export async function POST(request: NextRequest) {
             `,
           };
 
+          console.log(`  - Sending email to: ${reminder.email}`);
+          
           // Send email
           const transporter = await createTransport();
-          await transporter.sendMail(mailOptions as any);
+          const emailResult = await transporter.sendMail(mailOptions as any);
+          
+          console.log(`  - Email sent successfully! Message ID: ${emailResult.messageId}`);
 
           // Update reminder status
           await prisma.reminder.update({
@@ -123,11 +162,28 @@ export async function POST(request: NextRequest) {
             id: reminder.id,
             title: reminder.title,
             email: reminder.email,
-            status: "sent"
+            status: "sent",
+            messageId: emailResult.messageId
           });
+        } else {
+          console.log(`  - Skipping reminder ${reminder.id} (conditions not met)`);
         }
       } catch (error) {
         console.error(`Error sending reminder ${reminder.id}:`, error);
+        
+        // Update reminder status to FAILED
+        try {
+          await prisma.reminder.update({
+            where: { id: reminder.id },
+            data: {
+              status: "FAILED"
+            }
+          });
+          console.log(`  - Updated reminder ${reminder.id} status to FAILED`);
+        } catch (updateError) {
+          console.error(`Failed to update reminder ${reminder.id} status:`, updateError);
+        }
+        
         errorCount++;
         results.push({
           id: reminder.id,
@@ -140,80 +196,111 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle recurring reminders (yearly)
+    console.log(`\n[${new Date().toISOString()}] Processing recurring reminders...`);
+    
     const recurringReminders = await prisma.reminder.findMany({
       where: {
         status: "SENT",
-        isRecurring: true,
-        // Find reminders that were sent exactly 1 year ago
-        date: {
-          gte: new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()),
-          lt: new Date(today.getFullYear() - 1, today.getMonth(), today.getDate() + 1)
-        }
+        isRecurring: true
       }
     });
+
+    console.log(`Found ${recurringReminders.length} sent recurring reminders to check`);
 
     let recurringCount = 0;
     for (const oldReminder of recurringReminders) {
       try {
-        // Check if we already created a recurring reminder for this year
-        const existingRecurring = await prisma.reminder.findFirst({
-          where: {
-            title: oldReminder.title,
-            email: oldReminder.email,
-            date: {
-              gte: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
-              lt: new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-            }
-          }
-        });
-
-        if (!existingRecurring) {
-          // Create new reminder for this year
-          const thisYear = new Date(oldReminder.date);
-          thisYear.setFullYear(today.getFullYear());
-          
-          const thisYearTime = oldReminder.time ? new Date(oldReminder.time) : null;
-          if (thisYearTime) {
-            thisYearTime.setFullYear(today.getFullYear());
-          }
-
-          await prisma.reminder.create({
-            data: {
+        const oldReminderDate = new Date(oldReminder.date);
+        const currentYear = today.getFullYear();
+        const reminderMonth = oldReminderDate.getMonth();
+        const reminderDay = oldReminderDate.getDate();
+        
+        // Create the date for this year
+        const thisYearDate = new Date(currentYear, reminderMonth, reminderDay);
+        thisYearDate.setHours(0, 0, 0, 0);
+        
+        console.log(`Checking recurring reminder ${oldReminder.id}: ${oldReminder.title}`);
+        console.log(`  - Original date: ${oldReminderDate.toISOString()}`);
+        console.log(`  - This year date: ${thisYearDate.toISOString()}`);
+        
+        // Only process if the recurring date is today or in the past this year
+        // and we haven't already created a reminder for this year
+        if (thisYearDate <= today) {
+          const existingRecurring = await prisma.reminder.findFirst({
+            where: {
               title: oldReminder.title,
-              description: oldReminder.description,
-              date: thisYear,
-              time: thisYearTime,
               email: oldReminder.email,
-              isEmailSent: false,
-              isRecurring: true,
-              status: "PENDING",
-              userId: oldReminder.userId
+              date: {
+                gte: new Date(currentYear, reminderMonth, reminderDay),
+                lt: new Date(currentYear, reminderMonth, reminderDay + 1)
+              }
             }
           });
 
-          recurringCount++;
+          if (!existingRecurring) {
+            console.log(`  - Creating new recurring reminder for ${currentYear}`);
+            
+            // Create new reminder for this year
+            const thisYearTime = oldReminder.time ? new Date(oldReminder.time) : null;
+            if (thisYearTime) {
+              thisYearTime.setFullYear(currentYear);
+              thisYearTime.setMonth(reminderMonth);
+              thisYearTime.setDate(reminderDay);
+            }
+
+            await prisma.reminder.create({
+              data: {
+                title: oldReminder.title,
+                description: oldReminder.description,
+                date: thisYearDate,
+                time: thisYearTime,
+                email: oldReminder.email,
+                isEmailSent: false,
+                isRecurring: true,
+                status: "PENDING",
+                userId: oldReminder.userId
+              }
+            });
+
+            recurringCount++;
+            console.log(`  - Created successfully!`);
+          } else {
+            console.log(`  - Already exists for this year, skipping`);
+          }
+        } else {
+          console.log(`  - Future date, skipping`);
         }
       } catch (error) {
         console.error(`Error creating recurring reminder for ${oldReminder.id}:`, error);
       }
     }
 
+    const finalMessage = `Đã gửi ${sentCount} nhắc nhở, ${errorCount} lỗi, tạo ${recurringCount} nhắc nhở lặp lại`;
+    console.log(`\n[${new Date().toISOString()}] Process completed: ${finalMessage}`);
+
     return NextResponse.json({
       success: true,
-      message: `Đã gửi ${sentCount} nhắc nhở, ${errorCount} lỗi, tạo ${recurringCount} nhắc nhở lặp lại`,
+      message: finalMessage,
       stats: {
         sent: sentCount,
         errors: errorCount,
         recurring: recurringCount,
-        total: remindersToSend.length
+        total: remindersToSend.length,
+        processed: sentCount + errorCount
       },
-      results
+      results,
+      timestamp: new Date().toISOString()
     });
 
   } catch (error) {
     console.error("Error in reminder sending process:", error);
     return NextResponse.json(
-      { error: "Có lỗi xảy ra khi gửi nhắc nhở" },
+      { 
+        success: false,
+        error: "Có lỗi xảy ra khi gửi nhắc nhở",
+        details: error instanceof Error ? error.message : "Unknown error",
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     );
   }

@@ -149,18 +149,20 @@ export default function AdminEventsPage() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 sm:h-16 gap-4 sm:gap-0">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => router.push("/admin")}
                 className="text-neutral-600 hover:text-primary transition-colors"
               >
                 <i className="fas fa-arrow-left mr-2"></i>
-                Quay lại Dashboard
+                <span className="hidden sm:inline">Quay lại Dashboard</span>
+                <span className="sm:hidden">Quay lại</span>
               </button>
-              <div className="w-px h-6 bg-neutral-300"></div>
-              <h1 className="text-xl font-bold text-emerald-700">
-                Quản Lý Sự Kiện
+              <div className="w-px h-6 bg-neutral-300 hidden sm:block"></div>
+              <h1 className="text-lg sm:text-xl font-bold text-emerald-700">
+                <span className="hidden sm:inline">Quản Lý Sự Kiện</span>
+                <span className="sm:hidden">Sự Kiện</span>
               </h1>
             </div>
 
@@ -175,7 +177,7 @@ export default function AdminEventsPage() {
                 });
                 setShowModal(true);
               }}
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors"
+              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors w-full sm:w-auto"
             >
               <i className="fas fa-plus mr-2"></i>
               Thêm Sự Kiện
@@ -187,7 +189,8 @@ export default function AdminEventsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Events Table */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-x-auto">
             <table className="w-full">
               <thead className="bg-neutral-50">
                 <tr>
@@ -233,11 +236,10 @@ export default function AdminEventsPage() {
                     </td>
                     <td className="py-4 px-6">
                       <span
-                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          event.isActive
+                        className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${event.isActive
                             ? "bg-green-100 text-green-800"
                             : "bg-gray-100 text-gray-800"
-                        }`}
+                          }`}
                       >
                         {event.isActive ? "Hoạt động" : "Tạm dừng"}
                       </span>
@@ -246,13 +248,15 @@ export default function AdminEventsPage() {
                       <div className="flex items-center space-x-2">
                         <button
                           onClick={() => handleEdit(event)}
-                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                          className="text-blue-600 hover:text-blue-800 transition-colors p-2 rounded-lg hover:bg-blue-50"
+                          title="Chỉnh sửa"
                         >
                           <i className="fas fa-edit"></i>
                         </button>
                         <button
                           onClick={() => handleDelete(event.id)}
-                          className="text-red-600 hover:text-red-800 transition-colors"
+                          className="text-red-600 hover:text-red-800 transition-colors p-2 rounded-lg hover:bg-red-50"
+                          title="Xóa"
                         >
                           <i className="fas fa-trash"></i>
                         </button>
@@ -262,6 +266,67 @@ export default function AdminEventsPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="lg:hidden">
+            {events.map((event) => (
+              <div
+                key={event.id}
+                className="border-b border-neutral-100 p-4 hover:bg-neutral-50"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1">
+                    <h3 className="font-medium text-neutral-900 mb-1">
+                      {event.title}
+                    </h3>
+                    <p className="text-sm text-neutral-600 mb-2">
+                      📅 {event.date}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2 ml-4">
+                    <button
+                      onClick={() => handleEdit(event)}
+                      className="text-blue-600 hover:text-blue-800 transition-colors p-2 rounded-lg hover:bg-blue-50"
+                      title="Chỉnh sửa"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(event.id)}
+                      className="text-red-600 hover:text-red-800 transition-colors p-2 rounded-lg hover:bg-red-50"
+                      title="Xóa"
+                    >
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <span
+                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(
+                      event.type
+                    )}`}
+                  >
+                    {getTypeLabel(event.type)}
+                  </span>
+                  <span
+                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${event.isActive
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-800"
+                      }`}
+                  >
+                    {event.isActive ? "Hoạt động" : "Tạm dừng"}
+                  </span>
+                </div>
+
+                {event.description && (
+                  <p className="text-sm text-neutral-600 mt-2">
+                    {event.description}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
 
           {events.length === 0 && (
@@ -276,7 +341,7 @@ export default function AdminEventsPage() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6">
+          <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6">
             <h3 className="text-lg font-bold text-emerald-700 mb-4">
               {editingEvent ? "Chỉnh Sửa Sự Kiện" : "Thêm Sự Kiện Mới"}
             </h3>
@@ -293,7 +358,7 @@ export default function AdminEventsPage() {
                     setFormData({ ...formData, title: e.target.value })
                   }
                   required
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent text-sm sm:text-base"
                 />
               </div>
 
@@ -309,7 +374,7 @@ export default function AdminEventsPage() {
                   }
                   placeholder="01-01"
                   required
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent text-sm sm:text-base"
                 />
               </div>
 
@@ -322,7 +387,7 @@ export default function AdminEventsPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, type: e.target.value as any })
                   }
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent text-sm sm:text-base"
                 >
                   <option value="HOLIDAY">Ngày lễ</option>
                   <option value="HISTORY">Lịch sử</option>
@@ -340,21 +405,21 @@ export default function AdminEventsPage() {
                     setFormData({ ...formData, description: e.target.value })
                   }
                   rows={3}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-emerald-700 focus:border-transparent text-sm sm:text-base resize-none"
                 />
               </div>
 
-              <div className="flex justify-end space-x-3 pt-4">
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-neutral-600 hover:text-neutral-800 transition-colors"
+                  className="px-4 py-2 text-neutral-600 hover:text-neutral-800 transition-colors border border-neutral-300 rounded-lg hover:bg-neutral-50 order-2 sm:order-1"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors"
+                  className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors order-1 sm:order-2"
                 >
                   {editingEvent ? "Cập nhật" : "Thêm mới"}
                 </button>

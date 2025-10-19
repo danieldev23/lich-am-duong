@@ -1,12 +1,11 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { EVENTS, HOLIDAYS } from '@/lib/constants';
 
-function AdminPageComponent() {
+export default function AdminPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [stats, setStats] = useState({
@@ -18,7 +17,7 @@ function AdminPageComponent() {
 
   useEffect(() => {
     if (status === 'loading') return;
-    
+
     if (!session) {
       router.push('/admin/login');
       return;
@@ -57,24 +56,27 @@ function AdminPageComponent() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 sm:h-16 gap-4 sm:gap-0">
             <div className="flex items-center space-x-4">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-lg flex items-center justify-center">
                 <i className="fas fa-cog text-white"></i>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-emerald-700">Bảng Điều Khiển Admin</h1>
-                <p className="text-sm text-neutral-600">Quản lý hệ thống lịch âm dương</p>
+                <h1 className="text-lg sm:text-xl font-bold text-emerald-700">
+                  <span className="hidden sm:inline">Bảng Điều Khiển Admin</span>
+                  <span className="sm:hidden">Admin Dashboard</span>
+                </h1>
+                <p className="text-xs sm:text-sm text-neutral-600">Quản lý hệ thống lịch âm dương</p>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-neutral-600">
+
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+              <span className="text-xs sm:text-sm text-neutral-600">
                 Xin chào, {session.user?.email}
               </span>
               <button
                 onClick={handleSignOut}
-                className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm"
+                className="bg-red-500 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-xs sm:text-sm w-full sm:w-auto"
               >
                 <i className="fas fa-sign-out-alt mr-2"></i>
                 Đăng xuất
@@ -144,7 +146,7 @@ function AdminPageComponent() {
               Thao Tác Nhanh
             </h2>
             <div className="space-y-3">
-              <button 
+              <button
                 onClick={() => router.push('/admin/events')}
                 className="w-full text-left p-3 rounded-lg hover:bg-neutral-50 transition-colors border border-neutral-200"
               >
@@ -156,8 +158,8 @@ function AdminPageComponent() {
                   </div>
                 </div>
               </button>
-              
-              <button 
+
+              <button
                 onClick={() => router.push('/admin/reminders')}
                 className="w-full text-left p-3 rounded-lg hover:bg-neutral-50 transition-colors border border-neutral-200"
               >
@@ -169,8 +171,21 @@ function AdminPageComponent() {
                   </div>
                 </div>
               </button>
-              
-              <button 
+
+              <button
+                onClick={() => router.push('/admin/affiliate')}
+                className="w-full text-left p-3 rounded-lg hover:bg-neutral-50 transition-colors border border-neutral-200"
+              >
+                <div className="flex items-center">
+                  <i className="fas fa-handshake text-purple-500 mr-3"></i>
+                  <div>
+                    <p className="font-medium">Quản lý Affiliate</p>
+                    <p className="text-sm text-neutral-600">Cấu hình banner và liên kết affiliate</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
                 onClick={() => router.push('/admin/settings')}
                 className="w-full text-left p-3 rounded-lg hover:bg-neutral-50 transition-colors border border-neutral-200"
               >
@@ -179,19 +194,6 @@ function AdminPageComponent() {
                   <div>
                     <p className="font-medium">Cài đặt hệ thống</p>
                     <p className="text-sm text-neutral-600">Cấu hình chung của ứng dụng</p>
-                  </div>
-                </div>
-              </button>
-              
-              <button 
-                onClick={() => router.push('/admin/affiliate')}
-                className="w-full text-left p-3 rounded-lg hover:bg-neutral-50 transition-colors border border-neutral-200"
-              >
-                <div className="flex items-center">
-                  <i className="fas fa-shopping-cart text-orange-500 mr-3"></i>
-                  <div>
-                    <p className="font-medium">Quản lý Affiliate Banner</p>
-                    <p className="text-sm text-neutral-600">Cấu hình banner quảng cáo sản phẩm</p>
                   </div>
                 </div>
               </button>
@@ -213,12 +215,12 @@ function AdminPageComponent() {
                   }).length}
                 </span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-neutral-600">Ngày lễ quan trọng</span>
                 <span className="font-semibold">{HOLIDAYS.length}</span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-neutral-600">Trạng thái hệ thống</span>
                 <span className="text-green-500 font-semibold">
@@ -231,12 +233,14 @@ function AdminPageComponent() {
         </div>
 
         {/* Recent Events */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-bold text-primary mb-4">
+        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-bold text-primary mb-4">
             <i className="fas fa-clock mr-2"></i>
             Sự Kiện Gần Đây
           </h2>
-          <div className="overflow-x-auto">
+
+          {/* Desktop Table */}
+          <div className="hidden lg:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-neutral-200">
@@ -252,13 +256,12 @@ function AdminPageComponent() {
                     <td className="py-3 px-4 text-sm">{event.date}</td>
                     <td className="py-3 px-4 font-medium">{event.title}</td>
                     <td className="py-3 px-4">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        event.type === 'holiday' ? 'bg-red-100 text-red-800' :
-                        event.type === 'history' ? 'bg-blue-100 text-blue-800' :
-                        'bg-pink-100 text-pink-800'
-                      }`}>
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${event.type === 'holiday' ? 'bg-red-100 text-red-800' :
+                          event.type === 'history' ? 'bg-blue-100 text-blue-800' :
+                            'bg-pink-100 text-pink-800'
+                        }`}>
                         {event.type === 'holiday' ? 'Ngày lễ' :
-                         event.type === 'history' ? 'Lịch sử' : 'Văn hóa'}
+                          event.type === 'history' ? 'Lịch sử' : 'Văn hóa'}
                       </span>
                     </td>
                     <td className="py-3 px-4 text-sm text-neutral-600">{event.desc}</td>
@@ -266,6 +269,28 @@ function AdminPageComponent() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="lg:hidden space-y-3">
+            {EVENTS.slice(0, 5).map((event, index) => (
+              <div key={index} className="border border-neutral-200 rounded-lg p-3">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-medium text-sm">{event.title}</h3>
+                  <span className="text-xs text-neutral-500">{event.date}</span>
+                </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${event.type === 'holiday' ? 'bg-red-100 text-red-800' :
+                      event.type === 'history' ? 'bg-blue-100 text-blue-800' :
+                        'bg-pink-100 text-pink-800'
+                    }`}>
+                    {event.type === 'holiday' ? 'Ngày lễ' :
+                      event.type === 'history' ? 'Lịch sử' : 'Văn hóa'}
+                  </span>
+                </div>
+                <p className="text-xs text-neutral-600">{event.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -283,17 +308,3 @@ function AdminPageComponent() {
     </div>
   );
 }
-
-const AdminPage = dynamic(() => Promise.resolve(AdminPageComponent), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen bg-beige flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-        <p className="text-neutral-600">Đang tải...</p>
-      </div>
-    </div>
-  )
-});
-
-export default AdminPage;

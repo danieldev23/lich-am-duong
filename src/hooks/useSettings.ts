@@ -7,6 +7,7 @@ interface ISettingKeys {
   site_description: string;
   contact_email: string;
   enable_reminders: string;
+  enable_captcha: string;
   seo_keywords: string;
   facebook_url: string;
   twitter_url: string;

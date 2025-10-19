@@ -46,13 +46,13 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary to-primary-light flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center mx-auto mb-4">
-            <i className="fas fa-user-shield text-white text-2xl"></i>
+      <div className="bg-white rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-md">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary to-primary-light rounded-full flex items-center justify-center mx-auto mb-4">
+            <i className="fas fa-user-shield text-white text-xl sm:text-2xl"></i>
           </div>
-          <h1 className="text-2xl font-bold text-neutral-800 mb-2">Đăng Nhập Admin</h1>
-          <p className="text-neutral-600">Truy cập bảng điều khiển quản trị</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-neutral-800 mb-2">Đăng Nhập Admin</h1>
+          <p className="text-sm sm:text-base text-neutral-600">Truy cập bảng điều khiển quản trị</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

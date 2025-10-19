@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/hooks/useSettings';
 import { Turnstile } from '@marsidev/react-turnstile';
+import { saveLocalReminder } from '@/lib/localStorage';
 
 interface ReminderFormProps {
   onSuccess?: () => void;
@@ -66,6 +67,7 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
     }
 
     try {
+      // Call API to create reminder on server
       const response = await fetch('/api/reminders', {
         method: 'POST',
         headers: {
@@ -73,33 +75,38 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
         },
         body: JSON.stringify({
           ...formData,
-          captchaToken: isCaptchaEnabled ? captchaToken : null,
+          captchaToken: isCaptchaEnabled ? captchaToken : undefined
         }),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage({ type: 'success', text: data.message });
-        setFormData({
-          email: '',
-          title: '',
-          description: '',
-          reminderDate: '',
-          reminderTime: '',
-          isRecurring: false
-        });
-        setCaptchaToken(null);
-        turnstileRef.current?.reset();
-        onSuccess?.();
-      } else {
-        setMessage({ type: 'error', text: data.error || 'Có lỗi xảy ra' });
-        // Reset CAPTCHA on error
-        setCaptchaToken(null);
-        turnstileRef.current?.reset();
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Có lỗi xảy ra khi tạo nhắc nhở');
       }
-    } catch {
-      setMessage({ type: 'error', text: 'Không thể kết nối đến server' });
+
+      const serverReminder = await response.json();
+
+      setMessage({ 
+        type: 'success', 
+        text: serverReminder.message // Use message from server
+      });
+      
+      setFormData({
+        email: '',
+        title: '',
+        description: '',
+        reminderDate: '',
+        reminderTime: '',
+        isRecurring: false
+      });
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
+      onSuccess?.();
+    } catch (error) {
+      setMessage({ 
+        type: 'error', 
+        text: error instanceof Error ? error.message : 'Có lỗi xảy ra khi lưu nhắc nhở' 
+      });
       // Reset CAPTCHA on error
       setCaptchaToken(null);
       turnstileRef.current?.reset();
@@ -282,8 +289,8 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
               </>
             ) : (
               <>
-                <i className="fas fa-paper-plane mr-2"></i>
-                Tạo Nhắc Nhở & Gửi Email
+                <i className="fas fa-save mr-2"></i>
+                Lưu Nhắc Nhở
               </>
             )}
           </button>
@@ -297,9 +304,10 @@ export function ReminderForm({ onSuccess }: ReminderFormProps) {
           Lưu ý:
         </h4>
         <ul className="text-xs text-blue-700 space-y-1">
-          <li>• Email nhắc nhở sẽ được gửi ngay lập tức</li>
-          <li>• Nếu chọn &ldquo;Lặp lại hàng năm&rdquo;, bạn sẽ nhận nhắc nhở mỗi năm</li>
-          <li>• Kiểm tra hộp thư spam nếu không nhận được email</li>
+          <li>• Nhắc nhở sẽ được lưu vào hệ thống với trạng thái "Chờ gửi"</li>
+          <li>• Email sẽ được gửi tự động vào đúng ngày và giờ đã đặt</li>
+          <li>• Nếu chọn &ldquo;Lặp lại hàng năm&rdquo;, nhắc nhở sẽ tự động tạo lại mỗi năm</li>
+          <li>• Bạn có thể xem, sửa và xóa nhắc nhở trong danh sách bên cạnh</li>
         </ul>
       </div>
     </div>
