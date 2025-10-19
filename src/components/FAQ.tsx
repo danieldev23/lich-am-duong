@@ -68,9 +68,9 @@ export function FAQ() {
         <p className="text-sm text-gray-500 mb-3">
           Không tìm thấy câu trả lời bạn cần?
         </p>
-        <button className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary transition-colors">
+        <a href='https://t.me/rumhtmvt' target='_blank' className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary transition-colors">
           ✉️ Liên hệ hỗ trợ
-        </button>
+        </a>
       </div>
     </div>
   );

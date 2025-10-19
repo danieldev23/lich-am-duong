@@ -47,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
         },
       };
     }
-  } catch (e) {}
+  } catch (e) { }
   return {
     title: "Lịch Âm Dương - Xem Ngày Tốt, Giờ Hoàng Đạo",
     description:
@@ -84,6 +84,8 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
+        <link rel="icon" href="/icon.png" />
+
       </head>
       <body
         className={`${inter.variable} font-sans bg-beige text-gray-800 antialiased`}>

@@ -74,7 +74,7 @@ export function Header() {
             <Link href="/" className="flex items-center space-x-2 text-white hover:opacity-90 transition-opacity">
               <div className="flex flex-col leading-tight">
                 <span className="text-xl font-bold tracking-wide">XEMLICH.ME</span>
-                <span className="text-xs opacity-90">Xem lịch âm - Xem ngày tốt xấu</span>
+                <span className="text-xs opacity-90">Lịch Việt cho mọi nhà</span>
               </div>
             </Link>
 
