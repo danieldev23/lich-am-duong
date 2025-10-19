@@ -102,17 +102,24 @@ export function AffiliateBanner() {
               <h3 className="text-sm font-semibold text-gray-800 mb-2 line-clamp-3">
                 {affiliateData.productTitle}
               </h3>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-orange-600 font-bold text-lg">
-                  {affiliateData.price.toLocaleString()} vnđ
+              <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2 bg-[#fafafa] p-2">
+                <span className="text-orange-600 font-bold text-base sm:text-lg">
+                  {affiliateData.price.toLocaleString()}đ
                 </span>
-                <span className="text-gray-400 text-sm line-through">
-                  {affiliateData.oldPrice.toLocaleString()} vnđ
-                </span>
+                {affiliateData.oldPrice > affiliateData.price && (
+                  <>
+                    <span className="text-orange-600 text-xs sm:text-sm">-</span>
+                    <span className="text-orange-600 font-bold text-base sm:text-lg">
+                      {affiliateData.oldPrice.toLocaleString()}đ
+                    </span>
+                  </>
+                )}
               </div>
-              <div className="inline-block px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
-                -{Math.round(((affiliateData.oldPrice - affiliateData.price) / affiliateData.oldPrice) * 100)}%
-              </div>
+              {/* {affiliateData.oldPrice > affiliateData.price && (
+                <div className="inline-block px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
+                  -{Math.round(((affiliateData.oldPrice - affiliateData.price) / affiliateData.oldPrice) * 100)}%
+                </div>
+              )} */}
             </div>
           </div>
 
@@ -129,9 +136,9 @@ export function AffiliateBanner() {
             ))}
             <div className="flex items-center gap-2 text-sm">
               <span className="text-orange-600">✓</span>
-              <span className="text-gray-700 font-semibold">
+              {/* <span className="text-gray-700 font-semibold">
                 Hàng Chính Hãng
-              </span>
+              </span> */}
             </div>
           </div>
 

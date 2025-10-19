@@ -229,11 +229,16 @@ export default function AdminAffiliatePage() {
                     Giá hiện tại (VNĐ)
                   </label>
                   <input
-                    type="number"
-                    value={affiliateData.price}
-                    onChange={(e) =>
-                      setAffiliateData({ ...affiliateData, price: Number(e.target.value) })
-                    }
+                    type="text"
+                    value={affiliateData.price === 0 ? '0' : affiliateData.price.toString()}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Chỉ cho phép nhập số và giữ số 0 đầu tiên
+                      if (value === '' || /^\d+$/.test(value)) {
+                        setAffiliateData({ ...affiliateData, price: value === '' ? 0 : Number(value) });
+                      }
+                    }}
+                    placeholder="0"
                     className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
@@ -242,11 +247,16 @@ export default function AdminAffiliatePage() {
                     Giá cũ (VNĐ)
                   </label>
                   <input
-                    type="number"
-                    value={affiliateData.oldPrice}
-                    onChange={(e) =>
-                      setAffiliateData({ ...affiliateData, oldPrice: Number(e.target.value) })
-                    }
+                    type="text"
+                    value={affiliateData.oldPrice === 0 ? '0' : affiliateData.oldPrice.toString()}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      // Chỉ cho phép nhập số và giữ số 0 đầu tiên
+                      if (value === '' || /^\d+$/.test(value)) {
+                        setAffiliateData({ ...affiliateData, oldPrice: value === '' ? 0 : Number(value) });
+                      }
+                    }}
+                    placeholder="0"
                     className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
                 </div>
@@ -349,16 +359,21 @@ export default function AdminAffiliatePage() {
                             {affiliateData.productTitle}
                           </h3>
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="text-orange-600 font-bold text-sm">
-                              {affiliateData.price.toLocaleString()} vnđ
+                            <span className="text-orange-600 font-bold text-base sm:text-lg">
+                              {affiliateData.price.toLocaleString()}đ
                             </span>
-                            <span className="text-gray-400 text-xs line-through">
-                              {affiliateData.oldPrice.toLocaleString()} vnđ
-                            </span>
+                            {affiliateData.oldPrice > affiliateData.price && (
+                              <>
+                                <span className="text-orange-600 text-xs sm:text-sm">-</span>
+                                <span className="text-orange-600 font-bold text-base sm:text-lg">
+                                  {affiliateData.oldPrice.toLocaleString()}đ
+                                </span>
+                              </>
+                            )}
                           </div>
-                          <div className="inline-block px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
+                          {/* <div className="inline-block px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded">
                             -{Math.round(((affiliateData.oldPrice - affiliateData.price) / affiliateData.oldPrice) * 100)}%
-                          </div>
+                          </div> */}
                         </div>
                       </div>
 
@@ -375,9 +390,9 @@ export default function AdminAffiliatePage() {
                         ))}
                         <div className="flex items-center gap-2 text-xs">
                           <span className="text-orange-600">✓</span>
-                          <span className="text-gray-700 font-semibold">
+                          {/* <span className="text-gray-700 font-semibold">
                             Hàng Chính Hãng
-                          </span>
+                          </span> */}
                         </div>
                       </div>
 
