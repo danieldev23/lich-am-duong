@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { TodayDisplay } from "@/components/TodayDisplay";
 import { UpcomingEvents } from "@/components/UpcomingEvents";
 import { Features } from "@/components/Features";
@@ -45,6 +46,7 @@ export default function Home() {
         </div>
       </main>
 
+      <Footer />
       <DayDetailsModal />
     </div>
   );

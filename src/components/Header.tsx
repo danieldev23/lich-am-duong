@@ -8,7 +8,7 @@ import { useSettings } from '@/hooks/useSettings';
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const {settings} = useSettings();
+  const { settings } = useSettings();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const pathname = usePathname();
 
@@ -35,8 +35,17 @@ export function Header() {
         { href: '/events', label: 'Ngày lễ năm 2025', icon: 'gift' },
       ],
     },
+    {
+      label: 'Hỗ trợ',
+      icon: 'question-circle',
+      dropdown: [
+        { href: '/terms', label: 'Điều khoản sử dụng', icon: 'file-contract' },
+        { href: '/privacy', label: 'Chính sách bảo mật', icon: 'shield-alt' },
+        { href: 'mailto:support@lichvietnam.com', label: 'Liên hệ', icon: 'envelope' },
+      ],
+    },
   ];
-  
+
 
   return (
     <>
@@ -89,13 +98,23 @@ export function Header() {
                     {openDropdown === item.label && (
                       <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-xl py-2 animate-fade-in">
                         {item.dropdown.map((subItem, subIndex) => (
-                          <Link
-                            key={subIndex}
-                            href={subItem.href}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary transition-colors"
-                          >
-                            » {subItem.label}
-                          </Link>
+                          subItem.href.startsWith('mailto:') ? (
+                            <a
+                              key={subIndex}
+                              href={subItem.href}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary transition-colors"
+                            >
+                              » {subItem.label}
+                            </a>
+                          ) : (
+                            <Link
+                              key={subIndex}
+                              href={subItem.href}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary transition-colors"
+                            >
+                              » {subItem.label}
+                            </Link>
+                          )
                         ))}
                       </div>
                     )}
@@ -149,14 +168,25 @@ export function Header() {
                       {openDropdown === item.label && (
                         <div className="pl-8 space-y-1 mt-1">
                           {item.dropdown.map((subItem, subIndex) => (
-                            <Link
-                              key={subIndex}
-                              href={subItem.href}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                              className="block px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors"
-                            >
-                              » {subItem.label}
-                            </Link>
+                            subItem.href.startsWith('mailto:') ? (
+                              <a
+                                key={subIndex}
+                                href={subItem.href}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="block px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors"
+                              >
+                                » {subItem.label}
+                              </a>
+                            ) : (
+                              <Link
+                                key={subIndex}
+                                href={subItem.href}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="block px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded transition-colors"
+                              >
+                                » {subItem.label}
+                              </Link>
+                            )
                           ))}
                         </div>
                       )}

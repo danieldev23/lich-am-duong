@@ -1,6 +1,7 @@
 "use client";
 
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { MonthlyCalendar } from "@/components/MonthlyCalendar";
 import { MonthlyHolidays } from "@/components/MonthlyHolidays";
 import { DayDetailsModal } from "@/components/DayDetailsModal";
@@ -171,6 +172,7 @@ export default function CalendarPage() {
         </div>
       </main>
 
+      <Footer />
       <DayDetailsModal />
     </div>
   );
