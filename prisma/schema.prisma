@@ -126,4 +126,5 @@ enum ReminderStatus {
   PENDING
   SENT
   CANCELLED
+  FAILED
 }
