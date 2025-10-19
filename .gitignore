@@ -9,7 +9,7 @@
 
 # production
 /build
-
+*.md
 # debug
 npm-debug.log*
 yarn-debug.log*
