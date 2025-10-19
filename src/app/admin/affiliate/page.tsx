@@ -226,7 +226,7 @@ export default function AdminAffiliatePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Giá hiện tại (VNĐ)
+                    Từ (VNĐ)
                   </label>
                   <input
                     type="text"
@@ -244,7 +244,7 @@ export default function AdminAffiliatePage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Giá cũ (VNĐ)
+                    Đến (VNĐ)
                   </label>
                   <input
                     type="text"
