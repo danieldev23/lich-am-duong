@@ -12,28 +12,42 @@ export async function GET(request: NextRequest) {
     // Find the next reminder that needs to be sent
     const nextReminder = await prisma.reminder.findFirst({
       where: {
-        reminderTime: {
-          gt: now,
+        date: {
+          gte: now,
         },
-        isSent: false,
+        isEmailSent: false,
+        status: 'PENDING',
       },
       orderBy: {
-        reminderTime: 'asc',
+        date: 'asc',
       },
       select: {
-        reminderTime: true,
+        date: true,
+        time: true,
         title: true,
+        id: true,
       },
     });
 
     if (nextReminder) {
-      console.log(`📅 Next reminder: "${nextReminder.title}" at ${nextReminder.reminderTime.toISOString()}`);
+      // Combine date and time for accurate reminder time
+      let reminderDateTime = new Date(nextReminder.date);
+      
+      if (nextReminder.time) {
+        const timeDate = new Date(nextReminder.time);
+        reminderDateTime.setHours(timeDate.getHours());
+        reminderDateTime.setMinutes(timeDate.getMinutes());
+        reminderDateTime.setSeconds(timeDate.getSeconds());
+      }
+
+      console.log(`📅 Next reminder: "${nextReminder.title}" at ${reminderDateTime.toISOString()}`);
       
       return NextResponse.json({
         success: true,
-        nextReminderTime: nextReminder.reminderTime.toISOString(),
+        nextReminderTime: reminderDateTime.toISOString(),
         title: nextReminder.title,
-        timeUntil: nextReminder.reminderTime.getTime() - now.getTime(),
+        timeUntil: reminderDateTime.getTime() - now.getTime(),
+        reminderId: nextReminder.id,
       });
     } else {
       console.log('📭 No upcoming reminders found');
@@ -55,4 +69,12 @@ export async function GET(request: NextRequest) {
   } finally {
     await prisma.$disconnect();
   }
+}
+
+// Enum type definition (should match your Prisma schema)
+enum ReminderStatus {
+  PENDING = 'PENDING',
+  SENT = 'SENT',
+  FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED',
 }
