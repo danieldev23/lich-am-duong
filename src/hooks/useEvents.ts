@@ -80,50 +80,60 @@ export function useEvents() {
       .slice(0, 10);
   };
 
-  const getEventsByMonth = (month: number, year?: number) => {
+  const getEventsByMonth = async (month: number, year?: number) => {
     const targetYear = year || new Date().getFullYear();
     const monthEvents: any[] = [];
     
-    // Holidays
-    HOLIDAYS.forEach(holiday => {
-      const [eventMonth, day] = holiday.date.split('-').map(Number);
-      if (eventMonth === month) {
-        monthEvents.push({
-          ...holiday,
-          date: new Date(targetYear, month - 1, day),
-          type: 'holiday' as const,
-          title: holiday.name
-        });
-      }
-    });
-    
-    // Events (chỉ từ API, không từ EVENTS constants để tránh duplicate)
-    events.forEach(event => {
-      // Kiểm tra xem event này có phải từ EVENTS constants không
-      const isFromConstants = EVENTS.some(constEvent => 
-        constEvent.date === event.date && constEvent.title === event.title
-      );
+    try {
+      // Lấy holidays từ API
+      const holidaysResponse = await fetch(`/api/holidays?month=${month}&year=${targetYear}`);
+      const holidaysData = await holidaysResponse.json();
       
-      // Chỉ thêm nếu không phải từ constants hoặc không trùng với holidays
-      if (!isFromConstants) {
+      if (holidaysData.success) {
+        monthEvents.push(...holidaysData.data);
+      }
+      
+      // Lấy events từ API
+      const eventsResponse = await fetch(`/api/events?month=${month}`);
+      const eventsData = await eventsResponse.json();
+      
+      if (eventsData.success) {
+        const apiEvents = eventsData.data.map((event: any) => {
+          const [eventMonth, day] = event.date.split('-').map(Number);
+          return {
+            ...event,
+            date: new Date(targetYear, month - 1, day)
+          };
+        });
+        monthEvents.push(...apiEvents);
+      }
+    } catch (error) {
+      console.error('Error fetching monthly events:', error);
+      // Fallback to constants
+      HOLIDAYS.forEach(holiday => {
+        const [eventMonth, day] = holiday.date.split('-').map(Number);
+        if (eventMonth === month) {
+          monthEvents.push({
+            ...holiday,
+            date: new Date(targetYear, month - 1, day),
+            type: 'holiday' as const,
+            title: holiday.name
+          });
+        }
+      });
+      
+      EVENTS.forEach(event => {
         const [eventMonth, day] = event.date.split('-').map(Number);
         if (eventMonth === month) {
-          const isDuplicate = monthEvents.some(existing => 
-            existing.title === event.title && 
-            existing.date.getDate() === day
-          );
-          
-          if (!isDuplicate) {
-            monthEvents.push({
-              ...event,
-              date: new Date(targetYear, month - 1, day)
-            });
-          }
+          monthEvents.push({
+            ...event,
+            date: new Date(targetYear, month - 1, day)
+          });
         }
-      }
-    });
+      });
+    }
     
-    // Loại bỏ duplicate cuối cùng dựa trên title + date
+    // Loại bỏ duplicate dựa trên title + date
     const uniqueEvents = monthEvents.filter((event, index, self) => 
       index === self.findIndex(e => 
         e.title === event.title && 

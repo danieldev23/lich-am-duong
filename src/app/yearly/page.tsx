@@ -2,16 +2,13 @@
 
 import { useState } from "react";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { Sidebar } from "@/components/Sidebar";
 import { cn } from "@/lib/utils";
 import { EVENTS, HOLIDAYS, getZodiacAnimal } from "@/lib/constants";
+import { convertSolar2Lunar } from "@/lib/lunar-calendar";
 
 // Mock functions and constants (replace with actual imports)
-const convertSolar2Lunar = (day: number, month: number, year: number) => ({
-  day: Math.floor(Math.random() * 30) + 1,
-  month: Math.floor(Math.random() * 12) + 1,
-  year: year - 76,
-});
 
 const getDateString = (date: Date) => {
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -97,7 +94,7 @@ function MiniCalendar({
                 isCurrentMonth && !todayCheck && !isWeekend && "text-gray-700",
                 isCurrentMonth && isWeekend && "text-red-500",
                 todayCheck &&
-                  "bg-primary text-white font-semibold hover:bg-emerald-800 border border-emerald-700"
+                "bg-primary text-white font-semibold hover:bg-emerald-800 border border-emerald-700"
               )}>
               {date.getDate()}
               {hasEvent && (
@@ -701,6 +698,8 @@ export default function YearlyPage() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

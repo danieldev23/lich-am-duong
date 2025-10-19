@@ -195,156 +195,161 @@ export function ReminderList() {
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {reminders.map((reminder) => (
-            <div
-              key={reminder.id}
-              className={cn(
-                "border-2 rounded-lg p-4 transition-all hover:shadow-md",
-                isUpcoming(reminder.date)
-                  ? "border-green-200 bg-green-50"
-                  : "border-gray-200 bg-gray-50"
-              )}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-neutral-800 mb-1">
-                    {reminder.title}
-                  </h3>
-                  {reminder.description && (
-                    <p className="text-sm text-neutral-600 mb-2">
-                      {reminder.description}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex items-center space-x-2 ml-4">
-                  {reminder.isRecurring && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      <i className="fas fa-repeat mr-1"></i>
-                      Hàng năm
-                    </span>
-                  )}
-
-                  <span className={cn(
-                    "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium",
-                    reminder.status === 'SENT' ? "bg-green-100 text-green-800" :
-                      reminder.status === 'FAILED' ? "bg-red-100 text-red-800" :
-                        "bg-yellow-100 text-yellow-800"
-                  )}>
-                    <i className={cn(
-                      "mr-1",
-                      reminder.status === 'SENT' ? "fas fa-check" :
-                        reminder.status === 'FAILED' ? "fas fa-times" :
-                          "fas fa-clock"
-                    )}></i>
-                    {reminder.status === 'SENT' ? 'Đã gửi' :
-                      reminder.status === 'FAILED' ? 'Thất bại' :
-                        'Chờ gửi'}
-                  </span>
-
-                  <span className={cn(
-                    "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium",
-                    isUpcoming(reminder.date)
-                      ? "bg-green-100 text-green-800"
-                      : "bg-gray-100 text-gray-800"
-                  )}>
-                    {getDaysUntil(reminder.date)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div className="flex items-center text-neutral-600">
-                  <i className="fas fa-calendar mr-2 text-emerald-600"></i>
-                  <span>{formatDate(reminder.date)}</span>
-                </div>
-
-                {reminder.time && (
-                  <div className="flex items-center text-neutral-600">
-                    <i className="fas fa-clock mr-2 text-emerald-600"></i>
-                    <span>{(() => {
-                      const timeDate = new Date(reminder.time);
-                      if (isNaN(timeDate.getTime())) {
-                        return reminder.time; // Show original time string if invalid
-                      }
-                      return timeDate.toLocaleTimeString("vi-VN", {
-                        hour: "2-digit",
-                        minute: "2-digit"
-                      });
-                    })()}</span>
-                  </div>
+        <>
+          {/* Scrollable Reminder List */}
+          <div className="max-h-[600px] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400">
+            {reminders.map((reminder) => (
+              <div
+                key={reminder.id}
+                className={cn(
+                  "border-2 rounded-lg p-3 sm:p-4 transition-all hover:shadow-md",
+                  isUpcoming(reminder.date)
+                    ? "border-green-200 bg-green-50"
+                    : "border-gray-200 bg-gray-50"
                 )}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 gap-3">
+                  <div className="flex-1">
+                    <h3 className="text-base sm:text-lg font-semibold text-neutral-800 mb-1">
+                      {reminder.title}
+                    </h3>
+                    {reminder.description && (
+                      <p className="text-xs sm:text-sm text-neutral-600 mb-2">
+                        {reminder.description}
+                      </p>
+                    )}
+                  </div>
 
-                <div className="flex items-center text-neutral-600">
-                  <i className="fas fa-envelope mr-2 text-emerald-600"></i>
-                  <span className="truncate">
-                    {reminder.email
-                      ? reminder.email.replace(/(.{3}).+(@.+)/, '$1***$2')
-                      : ''}
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {reminder.isRecurring && (
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        <i className="fas fa-repeat mr-1"></i>
+                        <span className="hidden sm:inline">Hàng năm</span>
+                        <span className="sm:hidden">Lặp lại</span>
+                      </span>
+                    )}
 
+                    <span className={cn(
+                      "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium",
+                      reminder.status === 'SENT' ? "bg-green-100 text-green-800" :
+                        reminder.status === 'FAILED' ? "bg-red-100 text-red-800" :
+                          "bg-yellow-100 text-yellow-800"
+                    )}>
+                      <i className={cn(
+                        "mr-1",
+                        reminder.status === 'SENT' ? "fas fa-check" :
+                          reminder.status === 'FAILED' ? "fas fa-times" :
+                            "fas fa-clock"
+                      )}></i>
+                      {reminder.status === 'SENT' ? 'Đã gửi' :
+                        reminder.status === 'FAILED' ? 'Thất bại' :
+                          'Chờ gửi'}
+                    </span>
+
+                    <span className={cn(
+                      "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium",
+                      isUpcoming(reminder.date)
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-800"
+                    )}>
+                      {getDaysUntil(reminder.date)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
+                  <div className="flex items-center text-neutral-600">
+                    <i className="fas fa-calendar mr-2 text-emerald-600 flex-shrink-0"></i>
+                    <span className="truncate">{formatDate(reminder.date)}</span>
+                  </div>
+
+                  {reminder.time && (
+                    <div className="flex items-center text-neutral-600">
+                      <i className="fas fa-clock mr-2 text-emerald-600 flex-shrink-0"></i>
+                      <span>{(() => {
+                        const timeDate = new Date(reminder.time);
+                        if (isNaN(timeDate.getTime())) {
+                          return reminder.time;
+                        }
+                        return timeDate.toLocaleTimeString("vi-VN", {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                        });
+                      })()}</span>
+                    </div>
+                  )}
+
+                  <div className="flex items-center text-neutral-600">
+                    <i className="fas fa-envelope mr-2 text-emerald-600 flex-shrink-0"></i>
+                    <span className="truncate">
+                      {reminder.email
+                        ? reminder.email.replace(/(.{3}).+(@.+)/, '$1***$2')
+                        : ''}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-3 pt-3 border-t border-neutral-200">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-neutral-500 truncate">
+                      Tạo lúc: {(() => {
+                        const createdDate = new Date(reminder.createdAt);
+                        if (isNaN(createdDate.getTime())) {
+                          return 'Không xác định';
+                        }
+                        return createdDate.toLocaleString('vi-VN', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        });
+                      })()}
+                    </span>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
 
-              <div className="mt-3 pt-3 border-t border-neutral-200">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-neutral-500">
-                    Tạo lúc: {(() => {
-                      const createdDate = new Date(reminder.createdAt);
-                      if (isNaN(createdDate.getTime())) {
-                        return 'Không xác định';
-                      }
-                      return createdDate.toLocaleString('vi-VN');
-                    })()}
-                  </span>
+          {/* Quick Stats - Fixed at bottom */}
+          <div className="mt-6 pt-6 border-t border-neutral-200">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+              <div className="bg-blue-50 rounded-lg p-3">
+                <div className="text-2xl font-bold text-blue-600">{reminders.length}</div>
+                <div className="text-xs text-blue-600">Tổng nhắc nhở</div>
+              </div>
 
-
+              <div className="bg-yellow-50 rounded-lg p-3">
+                <div className="text-2xl font-bold text-yellow-600">
+                  {reminders.filter(r => r.status === 'PENDING').length}
                 </div>
+                <div className="text-xs text-yellow-600">Chờ gửi</div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
 
-      {/* Quick Stats */}
-      {reminders.length > 0 && (
-        <div className="mt-6 pt-6 border-t border-neutral-200">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-            <div className="bg-blue-50 rounded-lg p-3">
-              <div className="text-2xl font-bold text-blue-600">{reminders.length}</div>
-              <div className="text-xs text-blue-600">Tổng nhắc nhở</div>
-            </div>
-
-            <div className="bg-yellow-50 rounded-lg p-3">
-              <div className="text-2xl font-bold text-yellow-600">
-                {reminders.filter(r => r.status === 'PENDING').length}
+              <div className="bg-green-50 rounded-lg p-3">
+                <div className="text-2xl font-bold text-green-600">
+                  {reminders.filter(r => r.status === 'SENT').length}
+                </div>
+                <div className="text-xs text-green-600">Đã gửi</div>
               </div>
-              <div className="text-xs text-yellow-600">Chờ gửi</div>
-            </div>
 
-            <div className="bg-green-50 rounded-lg p-3">
-              <div className="text-2xl font-bold text-green-600">
-                {reminders.filter(r => r.status === 'SENT').length}
+              <div className="bg-purple-50 rounded-lg p-3">
+                <div className="text-2xl font-bold text-purple-600">
+                  {reminders.filter(r => r.isRecurring).length}
+                </div>
+                <div className="text-xs text-purple-600">Lặp lại</div>
               </div>
-              <div className="text-xs text-green-600">Đã gửi</div>
-            </div>
 
-            <div className="bg-purple-50 rounded-lg p-3">
-              <div className="text-2xl font-bold text-purple-600">
-                {reminders.filter(r => r.isRecurring).length}
+              <div className="bg-orange-50 rounded-lg p-3">
+                <div className="text-2xl font-bold text-orange-600">
+                  {reminders.filter(r => getDaysUntil(r.date) === 'Hôm nay').length}
+                </div>
+                <div className="text-xs text-orange-600">Hôm nay</div>
               </div>
-              <div className="text-xs text-purple-600">Lặp lại</div>
-            </div>
-
-            <div className="bg-orange-50 rounded-lg p-3">
-              <div className="text-2xl font-bold text-orange-600">
-                {reminders.filter(r => getDaysUntil(r.date) === 'Hôm nay').length}
-              </div>
-              <div className="text-xs text-orange-600">Hôm nay</div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Edit Modal */}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import {
   convertSolar2Lunar,
   convertLunar2Solar,
@@ -447,6 +448,8 @@ export default function ConverterPage() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }

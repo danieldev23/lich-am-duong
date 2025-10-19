@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { useEvents } from '@/hooks/useEvents';
+import { EVENTS, HOLIDAYS } from '@/lib/constants';
 
 const EVENT_TYPE_STYLES = {
   holiday: {
@@ -34,9 +34,50 @@ const EVENT_TYPE_ICONS = {
 export function MonthlyHolidays() {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const { getEventsByMonth, isLoading } = useEvents();
+  const [monthlyEvents, setMonthlyEvents] = useState<any[]>([]);
 
-  const monthlyEvents = getEventsByMonth(currentMonth, currentYear);
+  useEffect(() => {
+    const getEventsByMonth = (month: number, year: number) => {
+      const events: any[] = [];
+
+      // Thêm holidays
+      HOLIDAYS.forEach(holiday => {
+        const [eventMonth, day] = holiday.date.split('-').map(Number);
+        if (eventMonth === month) {
+          events.push({
+            ...holiday,
+            date: new Date(year, month - 1, day),
+            type: 'holiday' as const,
+            title: holiday.name,
+            description: `Ngày lễ ${holiday.name}`
+          });
+        }
+      });
+
+      // Thêm events
+      EVENTS.forEach(event => {
+        const [eventMonth, day] = event.date.split('-').map(Number);
+        if (eventMonth === month) {
+          events.push({
+            ...event,
+            date: new Date(year, month - 1, day)
+          });
+        }
+      });
+
+      // Loại bỏ duplicate dựa trên title + date
+      const uniqueEvents = events.filter((event, index, self) =>
+        index === self.findIndex(e =>
+          e.title === event.title &&
+          e.date.getTime() === event.date.getTime()
+        )
+      );
+
+      return uniqueEvents.sort((a, b) => a.date.getTime() - b.date.getTime());
+    };
+
+    setMonthlyEvents(getEventsByMonth(currentMonth, currentYear));
+  }, [currentMonth, currentYear]);
 
   const getMonthName = (month: number) => {
     const months = [
@@ -94,7 +135,7 @@ export function MonthlyHolidays() {
             </div>
             Sự Kiện Trong {getMonthName(currentMonth)} {currentYear}
           </h2>
-          
+
           <div className="flex items-center space-x-3">
             <button
               onClick={goToPreviousMonth}
@@ -102,13 +143,13 @@ export function MonthlyHolidays() {
             >
               <i className="fas fa-chevron-left"></i>
             </button>
-            
+
             <div className="px-4 py-2 bg-gradient-to-r from-emerald-50 to-emerald-100 rounded-xl border border-emerald-200 shadow-sm">
               <span className="text-emerald-700 font-medium">
                 {getMonthName(currentMonth)} {currentYear}
               </span>
             </div>
-            
+
             <button
               onClick={goToNextMonth}
               className="p-3 rounded-xl hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-100 transition-all duration-300 text-gray-700 hover:text-emerald-700 hover:shadow-md"
@@ -119,15 +160,7 @@ export function MonthlyHolidays() {
         </div>
 
         {/* Events List */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="animate-pulse">
-                <div className="h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl"></div>
-              </div>
-            ))}
-          </div>
-        ) : monthlyEvents.length === 0 ? (
+        {monthlyEvents.length === 0 ? (
           <div className="text-center py-12">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <i className="fas fa-calendar-times text-2xl text-gray-400"></i>
@@ -179,16 +212,16 @@ export function MonthlyHolidays() {
                           </div>
                         </div>
                       </div>
-                      
+
                       <span className="text-xs font-medium px-3 py-1.5 bg-white/80 backdrop-blur-sm rounded-full shadow-sm">
                         {getEventTypeLabel(event.type)}
                       </span>
                     </div>
-                    
+
                     <h3 className={cn("font-bold text-lg mb-3 leading-tight group-hover:text-primary transition-colors", eventStyle.text)}>
                       {event.title}
                     </h3>
-                    
+
                     {(event.description || event.desc) && (
                       <p className={cn("text-sm opacity-90 leading-relaxed", eventStyle.text)}>
                         {event.description || event.desc}

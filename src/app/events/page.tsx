@@ -1,6 +1,7 @@
 "use client";
 
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import {
   EVENTS,
   HOLIDAYS,
@@ -350,8 +351,8 @@ export default function EventsPage() {
                                     event.type === "holiday"
                                       ? `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e74c3c' fill-opacity='0.3'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm0 0c0 5.5 4.5 10 10 10s10-4.5 10-10-4.5-10-10-10-10 4.5-10 10z'/%3E%3C/g%3E%3C/svg%3E")`
                                       : event.type === "history"
-                                      ? `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233498db' fill-opacity='0.3'%3E%3Cpath d='M20 0l20 20-20 20L0 20z'/%3E%3C/g%3E%3C/svg%3E")`
-                                      : `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e91e63' fill-opacity='0.3'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3Ccircle cx='3' cy='13' r='3'/%3E%3Ccircle cx='13' cy='3' r='3'/%3E%3C/g%3E%3C/svg%3E")`,
+                                        ? `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%233498db' fill-opacity='0.3'%3E%3Cpath d='M20 0l20 20-20 20L0 20z'/%3E%3C/g%3E%3C/svg%3E")`
+                                        : `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23e91e63' fill-opacity='0.3'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3Ccircle cx='3' cy='13' r='3'/%3E%3Ccircle cx='13' cy='3' r='3'/%3E%3C/g%3E%3C/svg%3E")`,
                                 }}
                               />
 
@@ -391,11 +392,11 @@ export default function EventsPage() {
                                         className={cn(
                                           "inline-flex items-center px-3 py-1 rounded-full text-xs font-medium",
                                           event.type === "holiday" &&
-                                            "bg-red-100 text-red-800",
+                                          "bg-red-100 text-red-800",
                                           event.type === "history" &&
-                                            "bg-blue-100 text-blue-800",
+                                          "bg-blue-100 text-blue-800",
                                           event.type === "culture" &&
-                                            "bg-pink-100 text-pink-800"
+                                          "bg-pink-100 text-pink-800"
                                         )}>
                                         {event.type === "holiday" &&
                                           "🎉 Ngày lễ"}
@@ -419,6 +420,8 @@ export default function EventsPage() {
           )}
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }
