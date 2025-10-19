@@ -388,12 +388,12 @@ export default function AdminAffiliatePage() {
                             </span>
                           </div>
                         ))}
-                        <div className="flex items-center gap-2 text-xs">
+                        {/* <div className="flex items-center gap-2 text-xs">
                           <span className="text-orange-600">✓</span>
-                          {/* <span className="text-gray-700 font-semibold">
+                          <span className="text-gray-700 font-semibold">
                             Hàng Chính Hãng
-                          </span> */}
-                        </div>
+                          </span>
+                        </div> */}
                       </div>
 
                       {/* Call to Action */}
