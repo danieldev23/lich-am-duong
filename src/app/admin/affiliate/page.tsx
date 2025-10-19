@@ -65,7 +65,7 @@ export default function AdminAffiliatePage() {
   const handleSave = async () => {
     try {
       const dataToSave = { ...affiliateData, isVisible };
-      
+
       const response = await fetch("/api/admin/affiliate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -223,7 +223,7 @@ export default function AdminAffiliatePage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-neutral-700 mb-2">
                     Giá hiện tại (VNĐ)
@@ -273,14 +273,14 @@ export default function AdminAffiliatePage() {
                 </label>
                 <div className="space-y-2 mb-4">
                   {affiliateData.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                      <span className="flex-1 text-sm">
+                    <div key={index} className="flex items-start gap-2 p-2 bg-gray-50 rounded">
+                      <span className="flex-1 text-sm break-words">
                         <strong>{feature.title}</strong>
                         {feature.description && `: ${feature.description}`}
                       </span>
                       <button
                         onClick={() => removeFeature(index)}
-                        className="text-red-500 hover:text-red-700"
+                        className="text-red-500 hover:text-red-700 flex-shrink-0 p-1"
                       >
                         <i className="fas fa-times"></i>
                       </button>

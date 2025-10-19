@@ -25,7 +25,7 @@ function AdminSettingsPageComponent() {
       setIsLoading(true);
       const response = await fetch("/api/admin/settings");
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         const settingsMap = data.data.reduce((acc: Record<string, string>, setting: any) => {
           acc[setting.key] = setting.value;
@@ -156,18 +156,20 @@ function AdminSettingsPageComponent() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center py-4 sm:h-16 gap-4 sm:gap-0">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => router.push("/admin")}
                 className="text-neutral-600 hover:text-primary"
               >
                 <i className="fas fa-arrow-left mr-2"></i>
-                Quay lại Dashboard
+                <span className="hidden sm:inline">Quay lại Dashboard</span>
+                <span className="sm:hidden">Quay lại</span>
               </button>
-              <div className="w-px h-6 bg-neutral-300"></div>
-              <h1 className="text-xl font-bold text-emerald-700">
-                Cài Đặt Hệ Thống
+              <div className="w-px h-6 bg-neutral-300 hidden sm:block"></div>
+              <h1 className="text-lg sm:text-xl font-bold text-emerald-700">
+                <span className="hidden sm:inline">Cài Đặt Hệ Thống</span>
+                <span className="sm:hidden">Cài Đặt</span>
               </h1>
             </div>
             <button
@@ -176,7 +178,7 @@ function AdminSettingsPageComponent() {
                 setFormData({ key: "", value: "", description: "" });
                 setShowModal(true);
               }}
-              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+              className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors w-full sm:w-auto"
             >
               <i className="fas fa-plus mr-2"></i>
               Thêm Cài Đặt
@@ -187,23 +189,24 @@ function AdminSettingsPageComponent() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Quick Email Setup */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
             <h2 className="text-lg font-bold text-primary flex items-center">
               <i className="fas fa-envelope mr-2"></i>
-              Cấu Hình Email Nhanh
+              <span className="hidden sm:inline">Cấu Hình Email Nhanh</span>
+              <span className="sm:hidden">Email Setup</span>
             </h2>
             <span className="text-xs text-neutral-500">
               Dùng để gửi nhắc nhở
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="border border-neutral-200 rounded-lg p-4">
-              <h3 className="font-semibold mb-2">
+              <h3 className="font-semibold mb-2 text-sm sm:text-base">
                 Thiết lập Gmail (App Password)
               </h3>
-              <p className="text-sm text-neutral-600 mb-3">
+              <p className="text-xs sm:text-sm text-neutral-600 mb-3">
                 Bật App Password trong tài khoản Google. Điền email và mật khẩu
                 ứng dụng ở các khoá email_user/email_pass.
               </p>
@@ -224,15 +227,15 @@ function AdminSettingsPageComponent() {
                   }
                   refetch();
                 }}
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors text-sm"
+                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary transition-colors text-xs sm:text-sm w-full sm:w-auto"
               >
                 Áp dụng Preset Gmail
               </button>
             </div>
 
             <div className="border border-neutral-200 rounded-lg p-4">
-              <h3 className="font-semibold mb-2">Thiết lập SMTP Tuỳ Chỉnh</h3>
-              <p className="text-sm text-neutral-600 mb-3">
+              <h3 className="font-semibold mb-2 text-sm sm:text-base">Thiết lập SMTP Tuỳ Chỉnh</h3>
+              <p className="text-xs sm:text-sm text-neutral-600 mb-3">
                 Dùng với các nhà cung cấp SMTP: đặt host, port, secure.
               </p>
               <button
@@ -252,7 +255,7 @@ function AdminSettingsPageComponent() {
                   }
                   refetch();
                 }}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-xs sm:text-sm w-full sm:w-auto"
               >
                 Áp dụng Preset SMTP
               </button>
@@ -288,25 +291,26 @@ function AdminSettingsPageComponent() {
         )}
 
         {/* Settings Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
           {Object.entries(settings).map(([key, value]) => (
-            <div key={key} className="bg-white rounded-xl shadow-lg p-6">
+            <div key={key} className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
               <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-neutral-800">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base sm:text-lg font-semibold text-neutral-800 break-words">
                     {key}
                   </h3>
                 </div>
                 <button
                   onClick={() => handleEdit(key)}
-                  className="text-blue-600 hover:text-blue-800 transition-colors"
+                  className="text-blue-600 hover:text-blue-800 transition-colors p-2 rounded-lg hover:bg-blue-50 ml-2 flex-shrink-0"
+                  title="Chỉnh sửa"
                 >
                   <i className="fas fa-edit"></i>
                 </button>
               </div>
               <div className="bg-neutral-50 rounded-lg p-3">
-                <p className="text-sm font-mono text-neutral-700 break-all">
-                  {value}
+                <p className="text-xs sm:text-sm font-mono text-neutral-700 break-all">
+                  {value || <span className="text-neutral-400 italic">Chưa có giá trị</span>}
                 </p>
               </div>
             </div>
@@ -314,41 +318,41 @@ function AdminSettingsPageComponent() {
         </div>
 
         {/* System Info */}
-        <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
+        <div className="mt-8 bg-white rounded-xl shadow-lg p-4 sm:p-6">
           <h3 className="text-lg font-bold text-emerald-700 mb-4">
             <i className="fas fa-info-circle mr-2"></i>
-            Thông Tin Hệ Thống
+            <span className="hidden sm:inline">Thông Tin Hệ Thống</span>
+            <span className="sm:hidden">Hệ Thống</span>
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="bg-neutral-50 rounded-lg p-4">
-              <div className="text-sm text-neutral-600">Phiên bản</div>
-              <div className="font-semibold">v1.0.0</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="bg-neutral-50 rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm text-neutral-600">Phiên bản</div>
+              <div className="font-semibold text-sm sm:text-base">v1.0.0</div>
             </div>
-            <div className="bg-neutral-50 rounded-lg p-4">
-              <div className="text-sm text-neutral-600">Database</div>
-              <div className="font-semibold">MySQL</div>
+            <div className="bg-neutral-50 rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm text-neutral-600">Database</div>
+              <div className="font-semibold text-sm sm:text-base">MySQL</div>
             </div>
-            <div className="bg-neutral-50 rounded-lg p-4">
-              <div className="text-sm text-neutral-600">Framework</div>
-              <div className="font-semibold">Next.js 15</div>
+            <div className="bg-neutral-50 rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm text-neutral-600">Framework</div>
+              <div className="font-semibold text-sm sm:text-base">Next.js 15</div>
             </div>
-            <div className="bg-neutral-50 rounded-lg p-4">
-              <div className="text-sm text-neutral-600">Múi giờ</div>
-              <div className="font-semibold">
-                {/* {getSetting("timezone", "GMT+7")}  */}
+            <div className="bg-neutral-50 rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm text-neutral-600">Múi giờ</div>
+              <div className="font-semibold text-sm sm:text-base">
                 GMT+7
               </div>
             </div>
-            <div className="bg-neutral-50 rounded-lg p-4">
-              <div className="text-sm text-neutral-600">Trạng thái</div>
-              <div className="font-semibold text-green-600">
+            <div className="bg-neutral-50 rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm text-neutral-600">Trạng thái</div>
+              <div className="font-semibold text-green-600 text-sm sm:text-base">
                 <i className="fas fa-check-circle mr-1"></i>
                 Hoạt động
               </div>
             </div>
-            <div className="bg-neutral-50 rounded-lg p-4">
-              <div className="text-sm text-neutral-600">Uptime</div>
-              <div className="font-semibold">24/7</div>
+            <div className="bg-neutral-50 rounded-lg p-3 sm:p-4">
+              <div className="text-xs sm:text-sm text-neutral-600">Uptime</div>
+              <div className="font-semibold text-sm sm:text-base">24/7</div>
             </div>
           </div>
         </div>
@@ -357,7 +361,7 @@ function AdminSettingsPageComponent() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6">
+          <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto p-4 sm:p-6">
             <h3 className="text-lg font-bold text-primary mb-4">
               {editingKey ? "Chỉnh Sửa Cài Đặt" : "Thêm Cài Đặt Mới"}
             </h3>
@@ -374,7 +378,7 @@ function AdminSettingsPageComponent() {
                   }
                   required
                   disabled={!!editingKey}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-neutral-100"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent disabled:bg-neutral-100 text-sm sm:text-base"
                   placeholder="site_title"
                 />
               </div>
@@ -389,7 +393,7 @@ function AdminSettingsPageComponent() {
                   }
                   required
                   rows={3}
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base resize-none"
                 />
               </div>
               <div>
@@ -402,21 +406,21 @@ function AdminSettingsPageComponent() {
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
                   placeholder="Mô tả cài đặt này"
                 />
               </div>
-              <div className="flex justify-end space-x-3 pt-4">
+              <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-neutral-600 hover:text-neutral-800 transition-colors"
+                  className="px-4 py-2 text-neutral-600 hover:text-neutral-800 transition-colors border border-neutral-300 rounded-lg hover:bg-neutral-50 order-2 sm:order-1"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
-                  className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                  className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors order-1 sm:order-2"
                 >
                   {editingKey ? "Cập nhật" : "Thêm mới"}
                 </button>

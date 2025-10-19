@@ -3,23 +3,24 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
-interface Reminder {
+type Reminder = {
   id: string;
-  email: string;
   title: string;
   description?: string;
+  email: string;
   date: string;
   time?: string;
   isRecurring: boolean;
+  status: 'PENDING' | 'SENT' | 'FAILED';
   createdAt: string;
-  status: string;
-}
+};
 
 export function ReminderList() {
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingReminder, setEditingReminder] = useState<Reminder | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+
 
   useEffect(() => {
     fetchReminders();
@@ -28,17 +29,33 @@ export function ReminderList() {
   const fetchReminders = async () => {
     try {
       const response = await fetch('/api/reminders');
+      if (!response.ok) {
+        throw new Error('Failed to fetch reminders');
+      }
+
       const data = await response.json();
-      setReminders(data.reminders || []);
+      if (data.success) {
+        setReminders(data.reminders);
+      } else {
+        console.error('Error fetching reminders:', data.error);
+      }
     } catch (error) {
-      console.error('Error fetching reminders:', error);
+      console.error('Error fetching reminders from API:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
+    if (!dateString) return 'Không có ngày';
+
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      console.error('Invalid date string:', dateString);
+      return 'Invalid Date';
+    }
+
+    return date.toLocaleDateString('vi-VN', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -47,21 +64,29 @@ export function ReminderList() {
   };
 
   const isUpcoming = (dateString: string) => {
+    if (!dateString) return false;
+
     const reminderDate = new Date(dateString);
+    if (isNaN(reminderDate.getTime())) return false;
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return reminderDate >= today;
   };
 
   const getDaysUntil = (dateString: string) => {
+    if (!dateString) return 'Không có ngày';
+
     const reminderDate = new Date(dateString);
+    if (isNaN(reminderDate.getTime())) return 'Invalid Date';
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     reminderDate.setHours(0, 0, 0, 0);
-    
+
     const diffTime = reminderDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 0) return 'Hôm nay';
     if (diffDays === 1) return 'Ngày mai';
     if (diffDays > 0) return `Còn ${diffDays} ngày`;
@@ -70,21 +95,23 @@ export function ReminderList() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Bạn có chắc chắn muốn xóa nhắc nhở này?')) return;
-    
+
     setIsDeleting(id);
     try {
       const response = await fetch(`/api/reminders?id=${id}`, {
         method: 'DELETE',
       });
 
-      if (response.ok) {
-        setReminders(prev => prev.filter(r => r.id !== id));
-      } else {
+      if (!response.ok) {
         const data = await response.json();
         alert(data.error || 'Có lỗi xảy ra khi xóa nhắc nhở');
+        return;
       }
-    } catch {
-      alert('Không thể kết nối đến server');
+
+      // Remove from local state
+      setReminders(prev => prev.filter(r => r.id !== id));
+    } catch (error) {
+      alert('Không thể kết nối đến server để xóa nhắc nhở');
     } finally {
       setIsDeleting(null);
     }
@@ -93,6 +120,8 @@ export function ReminderList() {
   const handleEdit = (reminder: Reminder) => {
     setEditingReminder(reminder);
   };
+
+
 
   const handleSaveEdit = async (updatedReminder: Reminder) => {
     try {
@@ -112,16 +141,23 @@ export function ReminderList() {
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setReminders(prev => prev.map(r => r.id === updatedReminder.id ? data.reminder : r));
-        setEditingReminder(null);
-      } else {
+      if (!response.ok) {
         const data = await response.json();
         alert(data.error || 'Có lỗi xảy ra khi cập nhật nhắc nhở');
+        return;
       }
-    } catch {
-      alert('Không thể kết nối đến server');
+
+      const result = await response.json();
+
+      // Update local state
+      setReminders(prev => prev.map(r => r.id === updatedReminder.id ? {
+        ...updatedReminder,
+        createdAt: r.createdAt // Keep original createdAt
+      } : r));
+
+      setEditingReminder(null);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Có lỗi xảy ra khi cập nhật nhắc nhở');
     }
   };
 
@@ -181,7 +217,7 @@ export function ReminderList() {
                     </p>
                   )}
                 </div>
-                
+
                 <div className="flex items-center space-x-2 ml-4">
                   {reminder.isRecurring && (
                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -189,7 +225,24 @@ export function ReminderList() {
                       Hàng năm
                     </span>
                   )}
-                  
+
+                  <span className={cn(
+                    "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium",
+                    reminder.status === 'SENT' ? "bg-green-100 text-green-800" :
+                      reminder.status === 'FAILED' ? "bg-red-100 text-red-800" :
+                        "bg-yellow-100 text-yellow-800"
+                  )}>
+                    <i className={cn(
+                      "mr-1",
+                      reminder.status === 'SENT' ? "fas fa-check" :
+                        reminder.status === 'FAILED' ? "fas fa-times" :
+                          "fas fa-clock"
+                    )}></i>
+                    {reminder.status === 'SENT' ? 'Đã gửi' :
+                      reminder.status === 'FAILED' ? 'Thất bại' :
+                        'Chờ gửi'}
+                  </span>
+
                   <span className={cn(
                     "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium",
                     isUpcoming(reminder.date)
@@ -206,49 +259,47 @@ export function ReminderList() {
                   <i className="fas fa-calendar mr-2 text-emerald-600"></i>
                   <span>{formatDate(reminder.date)}</span>
                 </div>
-                
+
                 {reminder.time && (
                   <div className="flex items-center text-neutral-600">
                     <i className="fas fa-clock mr-2 text-emerald-600"></i>
-                    <span>{new Date(reminder.time).toLocaleTimeString("vi-VN", {
-                      hour: "2-digit",
-                      minute: "2-digit"
-                    })}</span>
+                    <span>{(() => {
+                      const timeDate = new Date(reminder.time);
+                      if (isNaN(timeDate.getTime())) {
+                        return reminder.time; // Show original time string if invalid
+                      }
+                      return timeDate.toLocaleTimeString("vi-VN", {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      });
+                    })()}</span>
                   </div>
                 )}
-                
+
                 <div className="flex items-center text-neutral-600">
                   <i className="fas fa-envelope mr-2 text-emerald-600"></i>
-                  <span className="truncate">{reminder.email}</span>
+                  <span className="truncate">
+                    {reminder.email
+                      ? reminder.email.replace(/(.{3}).+(@.+)/, '$1***$2')
+                      : ''}
+                  </span>
+
                 </div>
               </div>
 
               <div className="mt-3 pt-3 border-t border-neutral-200">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-neutral-500">
-                    Tạo lúc: {new Date(reminder.createdAt).toLocaleString('vi-VN')}
+                    Tạo lúc: {(() => {
+                      const createdDate = new Date(reminder.createdAt);
+                      if (isNaN(createdDate.getTime())) {
+                        return 'Không xác định';
+                      }
+                      return createdDate.toLocaleString('vi-VN');
+                    })()}
                   </span>
-                  
-                  <div className="flex items-center space-x-2">
-                    <button 
-                      onClick={() => handleEdit(reminder)}
-                      className="text-xs text-emerald-600 hover:text-emerald-700 transition-colors"
-                    >
-                      <i className="fas fa-edit mr-1"></i>
-                      Sửa
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(reminder.id)}
-                      disabled={isDeleting === reminder.id}
-                      className="text-xs text-red-600 hover:text-red-700 transition-colors disabled:opacity-50"
-                    >
-                      <i className={cn(
-                        "mr-1",
-                        isDeleting === reminder.id ? "fas fa-spinner fa-spin" : "fas fa-trash"
-                      )}></i>
-                      {isDeleting === reminder.id ? 'Đang xóa...' : 'Xóa'}
-                    </button>
-                  </div>
+
+
                 </div>
               </div>
             </div>
@@ -259,26 +310,33 @@ export function ReminderList() {
       {/* Quick Stats */}
       {reminders.length > 0 && (
         <div className="mt-6 pt-6 border-t border-neutral-200">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
             <div className="bg-blue-50 rounded-lg p-3">
               <div className="text-2xl font-bold text-blue-600">{reminders.length}</div>
               <div className="text-xs text-blue-600">Tổng nhắc nhở</div>
             </div>
-            
+
+            <div className="bg-yellow-50 rounded-lg p-3">
+              <div className="text-2xl font-bold text-yellow-600">
+                {reminders.filter(r => r.status === 'PENDING').length}
+              </div>
+              <div className="text-xs text-yellow-600">Chờ gửi</div>
+            </div>
+
             <div className="bg-green-50 rounded-lg p-3">
               <div className="text-2xl font-bold text-green-600">
-                {reminders.filter(r => isUpcoming(r.date)).length}
+                {reminders.filter(r => r.status === 'SENT').length}
               </div>
-              <div className="text-xs text-green-600">Sắp tới</div>
+              <div className="text-xs text-green-600">Đã gửi</div>
             </div>
-            
+
             <div className="bg-purple-50 rounded-lg p-3">
               <div className="text-2xl font-bold text-purple-600">
                 {reminders.filter(r => r.isRecurring).length}
               </div>
               <div className="text-xs text-purple-600">Lặp lại</div>
             </div>
-            
+
             <div className="bg-orange-50 rounded-lg p-3">
               <div className="text-2xl font-bold text-orange-600">
                 {reminders.filter(r => getDaysUntil(r.date) === 'Hôm nay').length}
@@ -317,7 +375,7 @@ export function ReminderList() {
                 <input
                   type="text"
                   value={editingReminder.title}
-                  onChange={(e) => setEditingReminder({...editingReminder, title: e.target.value})}
+                  onChange={(e) => setEditingReminder({ ...editingReminder, title: e.target.value })}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 />
@@ -329,7 +387,7 @@ export function ReminderList() {
                 </label>
                 <textarea
                   value={editingReminder.description || ''}
-                  onChange={(e) => setEditingReminder({...editingReminder, description: e.target.value})}
+                  onChange={(e) => setEditingReminder({ ...editingReminder, description: e.target.value })}
                   rows={3}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent resize-none"
                 />
@@ -342,7 +400,7 @@ export function ReminderList() {
                 <input
                   type="email"
                   value={editingReminder.email}
-                  onChange={(e) => setEditingReminder({...editingReminder, email: e.target.value})}
+                  onChange={(e) => setEditingReminder({ ...editingReminder, email: e.target.value })}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                 />
@@ -356,7 +414,7 @@ export function ReminderList() {
                   <input
                     type="date"
                     value={new Date(editingReminder.date).toISOString().split('T')[0]}
-                    onChange={(e) => setEditingReminder({...editingReminder, date: e.target.value})}
+                    onChange={(e) => setEditingReminder({ ...editingReminder, date: e.target.value })}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   />
@@ -369,7 +427,7 @@ export function ReminderList() {
                   <input
                     type="time"
                     value={editingReminder.time ? new Date(editingReminder.time).toTimeString().slice(0, 5) : ''}
-                    onChange={(e) => setEditingReminder({...editingReminder, time: e.target.value})}
+                    onChange={(e) => setEditingReminder({ ...editingReminder, time: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-600 focus:border-transparent"
                   />
                 </div>
@@ -380,7 +438,7 @@ export function ReminderList() {
                   type="checkbox"
                   id="editIsRecurring"
                   checked={editingReminder.isRecurring}
-                  onChange={(e) => setEditingReminder({...editingReminder, isRecurring: e.target.checked})}
+                  onChange={(e) => setEditingReminder({ ...editingReminder, isRecurring: e.target.checked })}
                   className="h-4 w-4 text-emerald-600 focus:ring-emerald-600 border-gray-300 rounded"
                 />
                 <label htmlFor="editIsRecurring" className="ml-2 block text-sm text-gray-700">

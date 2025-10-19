@@ -11,7 +11,12 @@
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "dev:with-cron": "concurrently \"npm run dev\" \"sleep 10 && npm run cron:local\"",
+    "dev:realtime": "concurrently \"npm run dev\" \"sleep 10 && npm run cron:realtime\"",
+    "cron:local": "node scripts/cron-local.js",
+    "cron:realtime": "curl -X POST http://localhost:3000/api/cron/start -H 'Content-Type: application/json' -d '{\"intervalSeconds\": 30}'",
+    "cron:send": "curl -X POST http://localhost:3000/api/reminders/send"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -42,6 +47,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "autoprefixer": "^10.4.16",
+    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
     "postcss": "^8.4.32",
