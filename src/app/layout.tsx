@@ -149,11 +149,11 @@ export default function RootLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
         <link rel="icon" href="/xemlich_favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/xemlich_favicon.ico" />
+        <link rel="apple-touch-icon" href="/xemlich_favicon.png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ef4444" />
         <meta name="msapplication-TileColor" content="#ef4444" />
-        <meta name="msapplication-TileImage" content="/xemlich_favicon.ico" />
+        <meta name="msapplication-TileImage" content="/xemlich_favicon.png" />
         <meta name="application-name" content="XemLich.me" />
         <meta name="apple-mobile-web-app-title" content="XemLich.me" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -170,37 +170,49 @@ export default function RootLayout({
         <meta name="copyright" content="XemLich.me" />
         <meta name="category" content="Calendar, Vietnamese Calendar, Lunar Calendar" />
 
+        {/* Facebook Meta Tags */}
+        <meta property="fb:app_id" content="YOUR_FACEBOOK_APP_ID" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://xemlich.me" />
+        <meta property="og:title" content="Lịch Âm Dương - Xem Ngày Tốt, Giờ Hoàng Đạo" />
+        <meta property="og:description" content="Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực. Chuyển đổi dương lịch sang âm lịch dễ dàng." />
+        <meta property="og:image" content="https://xemlich.me/xemlich_banner.png" />
+        <meta property="og:image:secure_url" content="https://xemlich.me/xemlich_banner.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:alt" content="Lịch Âm Dương Việt Nam - XemLich.me" />
+        <meta property="og:site_name" content="XemLich.me" />
+        <meta property="og:locale" content="vi_VN" />
+        <meta property="og:locale:alternate" content="en_US" />
+        <meta property="article:publisher" content="https://www.facebook.com/xemlichme" />
+        <meta property="article:author" content="https://www.facebook.com/xemlichme" />
+
         {/* Zalo Meta Tags */}
         <meta property="zalo:title" content="Lịch Âm Dương - Xem Ngày Tốt, Giờ Hoàng Đạo" />
         <meta property="zalo:description" content="Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực. Chuyển đổi dương lịch sang âm lịch dễ dàng." />
-        <meta property="zalo:image" content="/xemlich_banner.png" />
+        <meta property="zalo:image" content="https://xemlich.me/xemlich_banner.png" />
         <meta property="zalo:url" content="https://xemlich.me" />
 
         {/* LinkedIn Meta Tags */}
         <meta property="linkedin:title" content="Lịch Âm Dương - Xem Ngày Tốt, Giờ Hoàng Đạo" />
         <meta property="linkedin:description" content="Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực." />
-        <meta property="linkedin:image" content="/xemlich_banner.png" />
+        <meta property="linkedin:image" content="https://xemlich.me/xemlich_banner.png" />
 
         {/* Telegram Meta Tags */}
         <meta property="telegram:title" content="Lịch Âm Dương - Xem Ngày Tốt, Giờ Hoàng Đạo" />
         <meta property="telegram:description" content="Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực." />
-        <meta property="telegram:image" content="/xemlich_banner.png" />
+        <meta property="telegram:image" content="https://xemlich.me/xemlich_banner.png" />
 
         {/* WhatsApp Meta Tags */}
         <meta property="whatsapp:title" content="Lịch Âm Dương - Xem Ngày Tốt, Giờ Hoàng Đạo" />
         <meta property="whatsapp:description" content="Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực." />
-        <meta property="whatsapp:image" content="/xemlich_banner.png" />
+        <meta property="whatsapp:image" content="https://xemlich.me/xemlich_banner.png" />
 
         {/* Pinterest Meta Tags */}
         <meta property="pinterest:title" content="Lịch Âm Dương - Xem Ngày Tốt, Giờ Hoàng Đạo" />
         <meta property="pinterest:description" content="Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực." />
-        <meta property="pinterest:image" content="/xemlich_banner.png" />
-
-        {/* Additional Open Graph for better social sharing */}
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:alt" content="Lịch Âm Dương Việt Nam - XemLich.me" />
+        <meta property="pinterest:image" content="https://xemlich.me/xemlich_banner.png" />
 
         {/* Twitter Card additional meta */}
         <meta name="twitter:image:alt" content="Lịch Âm Dương Việt Nam - XemLich.me" />
