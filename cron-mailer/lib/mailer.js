@@ -55,13 +55,13 @@ async function createTransport() {
     cfg.service === "gmailapp" ||
     cfg.service === "gmail_app"
   ) {
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
       service: "gmail",
       auth: { user: cfg.user, pass: cfg.pass },
     });
   }
   
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: cfg.host,
     port: cfg.port ?? 587,
     secure: cfg.secure ?? false,

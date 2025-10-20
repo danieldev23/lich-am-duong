@@ -8,7 +8,7 @@ const logger = require('./lib/logger');
 class CronMailer {
   constructor() {
     this.reminderService = new ReminderService();
-    this.cronSchedule = process.env.CRON_SCHEDULE || '*/5 * * * *'; // Mỗi 5 phút
+    this.cronSchedule = process.env.CRON_SCHEDULE || '* * * * *'; // Mỗi 5 phút
     this.timezone = process.env.TIMEZONE || 'Asia/Ho_Chi_Minh';
     this.isRunning = false;
   }
