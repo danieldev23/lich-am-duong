@@ -1,0 +1,29 @@
+{
+  "name": "calendar-cron-mailer",
+  "version": "1.0.0",
+  "description": "Standalone cron job for sending calendar reminder emails",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.10",
+    "node-cron": "^3.0.3",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/nodemailer": "^6.4.13"
+  },
+  "keywords": [
+    "cron",
+    "email",
+    "calendar",
+    "reminder",
+    "nodejs"
+  ],
+  "author": "Calendar Team",
+  "license": "MIT"
+}

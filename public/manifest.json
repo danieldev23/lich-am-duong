@@ -1,0 +1,28 @@
+{
+  "name": "Lịch Âm Dương Việt Nam - XemLich.me",
+  "short_name": "XemLich.me",
+  "description": "Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực. Chuyển đổi dương lịch sang âm lịch dễ dàng.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5dc",
+  "theme_color": "#ef4444",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/xemlich_favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/xemlich_favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["productivity", "utilities", "lifestyle"],
+  "lang": "vi",
+  "scope": "/",
+  "id": "xemlich-calendar"
+}

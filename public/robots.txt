@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://xemlich.me/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /admin/
+Disallow: /api/
+
+# Allow important pages
+Allow: /
+Allow: /lich-am/
+Allow: /chuyen-doi/
+Allow: /ngay-tot/
+Allow: /gio-hoang-dao/
+Allow: /tiet-khi/
+
+# Crawl delay
+Crawl-delay: 1

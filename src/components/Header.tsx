@@ -73,7 +73,7 @@ export function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2 text-white hover:opacity-90 transition-opacity">
               <div className="flex flex-col leading-tight">
-                <span className="text-xl font-bold tracking-wide">XEMLICH.ME</span>
+                <img src="/xemlich_logo.png" alt="" className="w-24 object-cover" />
                 <span className="text-xs opacity-90">Lịch Việt cho mọi nhà</span>
               </div>
             </Link>

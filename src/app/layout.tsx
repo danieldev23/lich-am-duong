@@ -44,6 +44,36 @@ export async function generateMetadata(): Promise<Metadata> {
             "Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực.",
           type: "website",
           locale: "vi_VN",
+          url: process.env.NEXT_PUBLIC_SITE_URL || "https://xemlich.me",
+          siteName: "XemLich.me",
+          images: [
+            {
+              url: "/xemlich_banner.png",
+              width: 1200,
+              height: 630,
+              alt: "Lịch Âm Dương Việt Nam - XemLich.me",
+            },
+          ],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title:
+            settingsObj.site_title ||
+            "Lịch Âm Dương - Xem Ngày Tốt, Giờ Hoàng Đạo",
+          description:
+            settingsObj.site_description ||
+            "Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực.",
+          images: ["/xemlich_banner.png"],
+        },
+        icons: {
+          icon: [
+            { url: "/xemlich_favicon.png", sizes: "32x32", type: "image/png" },
+            { url: "/xemlich_favicon.png", sizes: "16x16", type: "image/png" },
+          ],
+          apple: [
+            { url: "/xemlich_favicon.png", sizes: "180x180", type: "image/png" },
+          ],
+          shortcut: "/xemlich_favicon.png",
         },
       };
     }
@@ -62,6 +92,33 @@ export async function generateMetadata(): Promise<Metadata> {
         "Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực.",
       type: "website",
       locale: "vi_VN",
+      url: process.env.NEXT_PUBLIC_SITE_URL || "https://xemlich.me",
+      siteName: "XemLich.me",
+      images: [
+        {
+          url: "/xemlich_banner.png",
+          width: 1200,
+          height: 630,
+          alt: "Lịch Âm Dương Việt Nam - XemLich.me",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Lịch Âm Dương - Xem Ngày Tốt, Giờ Hoàng Đạo",
+      description:
+        "Lịch âm dương Việt Nam chính xác, xem ngày tốt, giờ hoàng đạo, hắc đạo, tiết khí, trực.",
+      images: ["/xemlich_banner.png"],
+    },
+    icons: {
+      icon: [
+        { url: "/xemlich_favicon.png", sizes: "32x32", type: "image/png" },
+        { url: "/xemlich_favicon.png", sizes: "16x16", type: "image/png" },
+      ],
+      apple: [
+        { url: "/xemlich_favicon.png", sizes: "180x180", type: "image/png" },
+      ],
+      shortcut: "/xemlich_favicon.png",
     },
   };
 }
@@ -79,12 +136,20 @@ export default function RootLayout({
   return (
     <html lang="vi" className="scroll-smooth">
       <head>
-        <link rel="icon" href="/favicon.ico" />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
-        <link rel="icon" href="/icon.png" />
+        <link rel="icon" href="/xemlich_favicon.png" />
+        <link rel="apple-touch-icon" href="/xemlich_favicon.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#ef4444" />
+        <meta name="msapplication-TileColor" content="#ef4444" />
+        <meta name="msapplication-TileImage" content="/xemlich_favicon.png" />
+        <meta name="application-name" content="XemLich.me" />
+        <meta name="apple-mobile-web-app-title" content="XemLich.me" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
       </head>
       <body
