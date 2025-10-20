@@ -7,14 +7,24 @@ Sitemap: https://xemlich.me/sitemap.xml
 # Disallow admin and API routes
 Disallow: /admin/
 Disallow: /api/
+Disallow: /_next/
+Disallow: /test-social/
+Disallow: /meta-test/
+Disallow: /seo-check/
 
 # Allow important pages
 Allow: /
-Allow: /lich-am/
-Allow: /chuyen-doi/
-Allow: /ngay-tot/
-Allow: /gio-hoang-dao/
-Allow: /tiet-khi/
+Allow: /calendar/
+Allow: /converter/
+Allow: /yearly/
+Allow: /events/
+Allow: /reminders/
+Allow: /countdown/
+Allow: /privacy/
+Allow: /terms/
 
 # Crawl delay
 Crawl-delay: 1
+
+# Host
+Host: https://xemlich.me

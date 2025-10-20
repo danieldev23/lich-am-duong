@@ -66,7 +66,7 @@ export function Footer() {
                         <h4 className="text-lg font-semibold mb-4">Hỗ Trợ</h4>
                         <ul className="space-y-2">
                             <li>
-                                <a href="mailto:support@lichvietnam.com" className="text-gray-300 hover:text-white transition-colors">
+                                <a href="https://t.me/rumhtmvt" className="text-gray-300 hover:text-white transition-colors">
                                     Liên Hệ
                                 </a>
                             </li>
@@ -78,6 +78,11 @@ export function Footer() {
                             <li>
                                 <Link href="/privacy" className="text-gray-300 hover:text-white transition-colors">
                                     Chính Sách Bảo Mật
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/seo-titles" className="text-gray-300 hover:text-white transition-colors text-xs">
+                                    SEO Check
                                 </Link>
                             </li>
                         </ul>

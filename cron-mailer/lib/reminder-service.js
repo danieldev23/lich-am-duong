@@ -1,5 +1,6 @@
 const { createTransport, senderFrom } = require('./mailer');
 const logger = require('./logger');
+const path = require('path');
 
 class ReminderService {
   constructor() {
@@ -118,8 +119,8 @@ class ReminderService {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #0f766e, #059669); color: white; padding: 20px; text-align: center;">
-            <h1 style="margin: 0; font-size: 24px;">📅 XEMLICH.ME</h1>
-            <p style="margin: 5px 0 0 0; opacity: 0.9;">Nhắc nhở sự kiện</p>
+            <img src="cid:xemlich_logo" alt="XEMLICH.ME" style="max-width: 200px; height: auto; margin-bottom: 10px;" />
+            <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 16px;">Nhắc nhở sự kiện</p>
           </div>
           
           <div style="padding: 30px; background: #f9fafb;">
@@ -164,6 +165,13 @@ class ReminderService {
           </div>
         </div>
       `,
+      attachments: [
+        {
+          filename: 'xemlich_logo.png',
+          path: path.join(__dirname, '..', 'xemlich_logo.png'),
+          cid: 'xemlich_logo'
+        }
+      ]
     };
   }
 
@@ -175,6 +183,7 @@ class ReminderService {
       to: reminder.email,
       subject: emailContent.subject,
       html: emailContent.html,
+      attachments: emailContent.attachments
     };
 
     logger.debug(`Sending email to: ${reminder.email}`, {

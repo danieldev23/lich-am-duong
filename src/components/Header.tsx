@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useSettings } from '@/hooks/useSettings';
@@ -10,7 +10,32 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { settings } = useSettings();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
   const pathname = usePathname();
+
+  const handleMouseEnter = (label: string) => {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
+    }
+    setOpenDropdown(label);
+  };
+
+  const handleMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 150); // 150ms delay để tránh menu biến mất khi di chuyển chuột
+    setHoverTimeout(timeout);
+  };
+
+  // Cleanup timeout khi component unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+      }
+    };
+  }, [hoverTimeout]);
 
   const navItems = [
     {
@@ -74,7 +99,7 @@ export function Header() {
             <Link href="/" className="flex items-center space-x-2 text-white hover:opacity-90 transition-opacity">
               <div className="flex flex-col leading-tight">
                 <img src="/xemlich_logo.png" alt="" className="w-24 object-cover" />
-                <span className="text-xs opacity-90">Lịch Việt cho mọi nhà</span>
+                {/* <span className="text-xs opacity-90">Lịch Việt cho mọi nhà</span> */}
               </div>
             </Link>
 
@@ -85,8 +110,8 @@ export function Header() {
                   <div
                     key={index}
                     className="relative group"
-                    onMouseEnter={() => setOpenDropdown(item.label)}
-                    onMouseLeave={() => setOpenDropdown(null)}
+                    onMouseEnter={() => handleMouseEnter(item.label)}
+                    onMouseLeave={handleMouseLeave}
                   >
                     <button
                       className="px-4 py-2 rounded text-sm font-medium text-white/95 hover:bg-white/10 hover:text-white transition-all duration-200 flex items-center"
@@ -96,7 +121,12 @@ export function Header() {
                       <i className="fas fa-chevron-down ml-1 text-xs"></i>
                     </button>
                     {openDropdown === item.label && (
-                      <div className="absolute top-full left-0 mt-1 w-56 bg-white rounded-lg shadow-xl py-2 animate-fade-in">
+                      <div
+                        className="absolute top-full left-0 w-56 bg-white rounded-lg shadow-xl py-2 animate-fade-in z-50"
+                        style={{ marginTop: '2px' }} // Giảm khoảng cách để dễ hover
+                        onMouseEnter={() => handleMouseEnter(item.label)}
+                        onMouseLeave={handleMouseLeave}
+                      >
                         {item.dropdown.map((subItem, subIndex) => (
                           subItem.href.startsWith('mailto:') ? (
                             <a

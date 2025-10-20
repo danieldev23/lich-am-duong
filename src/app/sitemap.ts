@@ -16,46 +16,54 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/lich-am`,
+      url: `${baseUrl}/calendar`,
       lastModified: new Date(),
       changeFrequency: 'daily' as const,
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/chuyen-doi`,
+      url: `${baseUrl}/converter`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/ngay-tot`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/gio-hoang-dao`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/tiet-khi`,
+      url: `${baseUrl}/yearly`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/events`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
       priority: 0.7,
     },
-  ]
-
-  // Generate calendar pages for different years and months
-  const calendarPages = years.flatMap(year =>
-    months.map(month => ({
-      url: `${baseUrl}/lich-am/${year}/${month}`,
+    {
+      url: `${baseUrl}/reminders`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/countdown`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.6,
-    }))
-  )
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.3,
+    },
+  ]
 
-  return [...staticPages, ...calendarPages]
+  return staticPages
 }
