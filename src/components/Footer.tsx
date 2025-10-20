@@ -11,7 +11,13 @@ export function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     {/* About Section */}
                     <div className="col-span-1 md:col-span-2">
-                        <h3 className="text-xl font-bold mb-4">Lịch Việt Nam</h3>
+                        <div className="mb-4">
+                            <img
+                                src="/xemlich_logo.png"
+                                alt="XemLich.me - Lịch Âm Dương Việt Nam"
+                                className="h-12 w-auto"
+                            />
+                        </div>
                         <p className="text-gray-300 mb-4">
                             Ứng dụng lịch âm Việt Nam toàn diện, cung cấp thông tin chính xác về
                             lịch âm dương, ngày lễ tết, và các sự kiện văn hóa truyền thống Việt Nam.
@@ -80,11 +86,7 @@ export function Footer() {
                                     Chính Sách Bảo Mật
                                 </Link>
                             </li>
-                            <li>
-                                <Link href="/seo-titles" className="text-gray-300 hover:text-white transition-colors text-xs">
-                                    SEO Check
-                                </Link>
-                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -93,7 +95,7 @@ export function Footer() {
                 <div className="border-t border-gray-700 mt-8 pt-6">
                     <div className="flex flex-col md:flex-row justify-between items-center">
                         <p className="text-gray-300 text-sm">
-                            © {currentYear} Lịch Việt Nam. Tất cả quyền được bảo lưu.
+                            © {currentYear} XemLich.me. Tất cả quyền được bảo lưu.
                         </p>
                         <div className="flex space-x-6 mt-4 md:mt-0">
                             <Link

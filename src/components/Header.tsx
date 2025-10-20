@@ -66,7 +66,7 @@ export function Header() {
       dropdown: [
         { href: '/terms', label: 'Điều khoản sử dụng', icon: 'file-contract' },
         { href: '/privacy', label: 'Chính sách bảo mật', icon: 'shield-alt' },
-        { href: 'mailto:support@lichvietnam.com', label: 'Liên hệ', icon: 'envelope' },
+        { href: 'https://t.me/rumhtmvt', label: 'Liên hệ', icon: 'envelope' },
       ],
     },
   ];
