@@ -31,7 +31,7 @@ export function AffiliateBanner() {
 
   const fetchAffiliateData = async () => {
     try {
-      const response = await fetch("/api/admin/affiliate");
+      const response = await fetch("/api/affiliate");
       const data = await response.json();
       if (data.success && data.data) {
         setAffiliateData(data.data);
