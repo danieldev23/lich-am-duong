@@ -50,8 +50,8 @@ export function AffiliateBanner() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="relative w-full max-w-md bg-gradient-to-br from-orange-500 via-red-500 to-orange-600 rounded-2xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6">
+      <div className="relative w-full max-w-md mx-auto bg-gradient-to-br from-orange-500 via-red-500 to-orange-600 rounded-2xl shadow-2xl overflow-hidden">
         {/* Close Button */}
         <button
           onClick={redirectToBuyLink}
@@ -88,7 +88,7 @@ export function AffiliateBanner() {
         {/* Product Content */}
         <div className="bg-white p-4">
           <div className="flex gap-3 mb-4">
-            <div className="flex-shrink-0 w-28 h-28 bg-white rounded-lg border-2 border-orange-200 overflow-hidden">
+            <div className="flex-shrink-0 w-20 h-20 sm:w-28 sm:h-28 bg-white rounded-lg border-2 border-orange-200 overflow-hidden">
               <img
                 src={affiliateData.productImg}
                 alt={affiliateData.productTitle}
@@ -98,8 +98,8 @@ export function AffiliateBanner() {
                 style={{ objectFit: "cover" }}
               />
             </div>
-            <div className="flex-1">
-              <h3 className="text-sm font-semibold text-gray-800 mb-2 line-clamp-3">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-xs sm:text-sm font-semibold text-gray-800 mb-2 line-clamp-2 sm:line-clamp-3">
                 {affiliateData.productTitle}
               </h3>
               <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2 bg-[#fafafa] p-2">

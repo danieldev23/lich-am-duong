@@ -5,14 +5,6 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || (session.user as any)?.role !== "admin") {
-      return NextResponse.json(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
     const affiliateData = await prisma.siteSettings.findFirst({
       where: { key: "affiliate_banner" },
     });
